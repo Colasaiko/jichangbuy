@@ -1126,7 +1126,7 @@ button, input, select, textarea {
 }
 
 .card-title-wrap {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .card-name {
@@ -1142,9 +1142,17 @@ button, input, select, textarea {
   color: var(--gold);
 }
 
+.card-subtitle {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted);
+  font-weight: 300;
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
 .card-en {
   font-size: 10px;
-  text-transform: uppercase;
   letter-spacing: 0.18em;
   color: var(--muted);
   display: block;
@@ -1509,7 +1517,132 @@ button, input, select, textarea {
   line-height: 1.75;
   color: var(--muted);
   font-weight: 300;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
+}
+
+/* Hero Coupon Card - Placed right below the subtitle */
+.hero-coupon-card {
+  margin: 0 0 28px 0;
+  padding: 16px 20px;
+  background-color: var(--surface);
+  border: 1px solid rgba(169, 138, 86, 0.45);
+  border-left: 3px solid var(--gold);
+  border-radius: var(--radius-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hero-coupon-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hero-coupon-tag {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.05em;
+}
+
+.hero-coupon-tag.standard {
+  color: var(--muted);
+}
+
+.hero-coupon-disc {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #8C6F38;
+  background-color: rgba(169, 138, 86, 0.12);
+  padding: 3px 10px;
+  border-radius: 2px;
+  border: 1px solid rgba(169, 138, 86, 0.25);
+}
+
+.hero-coupon-disc.standard {
+  color: var(--muted);
+  background-color: #F4F1EA;
+  border-color: var(--hairline);
+}
+
+.hero-coupon-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hero-coupon-code-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-coupon-code-box .code-label {
+  font-size: 0.875rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.hero-coupon-code-box .code-text {
+  font-family: 'SF Mono', Consolas, Monaco, monospace;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ink);
+  background-color: #FAF9F6;
+  padding: 4px 12px;
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  letter-spacing: 0.06em;
+}
+
+.btn-hero-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background-color: var(--ink);
+  color: #FAF9F6;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-hero-copy:hover {
+  background-color: var(--gold);
+  color: #FFFFFF;
+}
+
+.hero-coupon-desc {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero-coupon-desc span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-coupon-desc i {
+  color: var(--gold);
+}
+
+.hero-coupon-card.no-coupon-card {
+  border-color: var(--hairline);
+  border-left-color: var(--muted);
+  background-color: #FAF9F6;
 }
 
 .detail-hero-cta {

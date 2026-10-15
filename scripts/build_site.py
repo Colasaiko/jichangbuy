@@ -433,6 +433,92 @@ def shell(title, content, floating, prefix='', is_detail=False):
 </body>
 </html>'''
 
+def build_brand_subtitles(b):
+    name = b.get('name', '')
+    is_feat = b.get('is_featured')
+    slug = b.get('slug')
+    plans = b.get('pricing', [])
+    min_m = b.get('min_month')
+    min_y = b.get('min_year')
+    min_o = b.get('min_onetime')
+    
+    # 1. 梯队与定位
+    if is_feat:
+        tier = "站长主力推荐 9 大旗舰品牌之一"
+        card_tier = "主力推荐旗舰"
+    elif slug == 'feiv':
+        tier = "精选高速专线品牌"
+        card_tier = "精选高速专线"
+    elif b.get('line_types_list') and any('iplc' in str(x).lower() for x in b['line_types_list']):
+        tier = "精选全专线独立品牌"
+        card_tier = "全专线架构"
+    elif b.get('line_types_list') and any('iepl' in str(x).lower() for x in b['line_types_list']):
+        tier = "精选高速专线品牌"
+        card_tier = "高速专线"
+    elif b.get('line_types_list') and any('bgp' in str(x).lower() or '中转' in str(x) for x in b['line_types_list']):
+        tier = "精选优质中转品牌"
+        card_tier = "优质中转"
+    else:
+        tier = "精选独立入库品牌"
+        card_tier = "精选入库"
+        
+    # 2. 线路类型描述
+    lt_list = b.get('line_types_list', [])
+    lt_str = ' · '.join(lt_list) if lt_list else '优质线路'
+    
+    # 3. 协议描述
+    proto = b.get('protocols')
+    if isinstance(proto, list):
+        proto_clean = [str(p) for p in proto if p]
+        proto_text = ' / '.join(proto_clean)
+    else:
+        proto_text = str(proto or '')
+    proto_phrase = f"，采用 {proto_text} 传输协议" if proto_text else ""
+    
+    # 4. 带宽/限速
+    spd = b.get('speedLimit')
+    spd_clean = re.sub(r'[（\(].*?[）\)]', '', str(spd or '')).strip()
+    spd_phrase = f"，{spd_clean}" if spd_clean else "，晚高峰高速稳定不限速"
+    
+    # 5. 设备限制
+    dev = b.get('deviceLimit')
+    dev_clean = re.sub(r'[（\(].*?[）\)]', '', str(dev or '')).strip()
+    dev_phrase = f"，{dev_clean}" if dev_clean else "，支持多设备全家共享同时接入"
+    
+    # 6. 套餐统计与价格
+    plans_cnt = len(plans)
+    price_parts = []
+    if min_m:
+        price_parts.append(f"最低月付起步仅 ¥{min_m:.2f}".rstrip('0').rstrip('.'))
+    if min_y:
+        price_parts.append(f"年付起步 ¥{min_y:.2f}".rstrip('0').rstrip('.'))
+    price_str = "（" + "，".join(price_parts) + "）" if price_parts else ""
+    
+    extra_pkg = "，并配备永久不限时备用流量包" if min_o else ""
+    
+    # 7. 解锁能力
+    ai_list = b.get('aiSupport', [])
+    stream_list = b.get('streamingSupport', [])
+    if ai_list and stream_list:
+        unlock_phrase = "全节点采用原生机房 IP 深度解锁 4K/8K 极清流媒体与全套 AI 生产力应用"
+    elif stream_list:
+        unlock_phrase = "原生 IP 节点深度解锁全平台 4K/8K 极清流媒体视频"
+    elif ai_list:
+        unlock_phrase = "原生 IP 节点稳定解锁主流 AI 生产力工具"
+    else:
+        unlock_phrase = "原生 IP 节点全面适配全球主流网站访问与极清流媒体"
+        
+    deep_subtitle = f"{tier}。基于【{lt_str}】网络架构{proto_phrase}{spd_phrase}{dev_phrase}。全站深度收录其 {plans_cnt} 款多周期购买方案{price_str}{extra_pkg}，{unlock_phrase}，网络通信零丢包、低延迟。"
+    
+    # 卡片简要副标题（2行以内，极度凝练有信息量）
+    card_subtitle = f"{card_tier} · {lt_str} · 收录 {plans_cnt} 款方案"
+    if min_m:
+        card_subtitle += f" · ¥{min_m:.2f}".rstrip('0').rstrip('.') + "起"
+    if min_o:
+        card_subtitle += " · 不限时包"
+        
+    return deep_subtitle, card_subtitle
+
 def build():
     OUT.mkdir(parents=True, exist_ok=True)
     brands = load()
@@ -447,6 +533,7 @@ def build():
         shutil.copyfile(CONTENT / f'{slug}.md', target / f'{slug}.md')
         
         code, disc, scope = coupon_info(b)
+        deep_subtitle, card_subtitle = build_brand_subtitles(b)
         
         # Tags for filter
         filter_tags = ['all']
@@ -495,6 +582,11 @@ def build():
           
           <div class="card-title-wrap">
             <h3 class="card-name"><a href="brands/{slug}/index.html">{e(b['name'])}</a></h3>
+            <p class="card-subtitle">{e(card_subtitle)}</p>
+          </div>
+          
+          <div class="card-coupon-row">
+            {coupon_badge_html}
           </div>
           
           <ul class="card-features">
@@ -511,10 +603,6 @@ def build():
               <span class="price-label">年付优惠</span>
               <strong class="price-val">{year_txt}</strong>
             </div>
-          </div>
-          
-          <div class="card-coupon-row">
-            {coupon_badge_html}
           </div>
           
           <div class="card-actions">
@@ -669,7 +757,43 @@ def build():
         body = re.sub(r'\[([^\]]+)\]\(/(?:ai|streaming|dedicated-line|guides)\)', r'\1', body)
         article = markdown.markdown(body, extensions=['tables', 'fenced_code', 'sane_lists'])
         article = re.sub(r'(<table>.*?</table>)', r'<div class="article-table-wrap">\1</div>', article, flags=re.S)
-        intro = b.get('heroDescription') or b.get('serviceIntro') or b.get('description') or ' · '.join(b.get('features', [])[:3])
+        
+        # Hero coupon box placed directly below the subtitle
+        if code:
+            hero_coupon_html = f'''
+            <div class="hero-coupon-card">
+              <div class="hero-coupon-header">
+                <span class="hero-coupon-tag"><i class="fa-solid fa-ticket"></i> 专属优惠码</span>
+                <span class="hero-coupon-disc">{e(disc)} 特惠</span>
+              </div>
+              <div class="hero-coupon-body">
+                <div class="hero-coupon-code-box">
+                  <span class="code-label">专属优惠码：</span>
+                  <code class="code-text" id="hero-code-{slug}">{e(code)}</code>
+                  <button type="button" class="btn-hero-copy" onclick="copyCoupon('{e(code)}')">
+                    <i class="fa-regular fa-copy"></i> 一键复制
+                  </button>
+                </div>
+                <div class="hero-coupon-desc">
+                  <span><i class="fa-solid fa-circle-check"></i> 适用范围：{e(scope or "全场所有套餐周期通用，结账输入即享折上折")}</span>
+                </div>
+              </div>
+            </div>
+            '''
+        else:
+            hero_coupon_html = f'''
+            <div class="hero-coupon-card no-coupon-card">
+              <div class="hero-coupon-header">
+                <span class="hero-coupon-tag standard"><i class="fa-solid fa-shield-check"></i> 官方正价保障</span>
+                <span class="hero-coupon-disc standard">底价直售</span>
+              </div>
+              <div class="hero-coupon-body">
+                <div class="hero-coupon-desc">
+                  <span><i class="fa-solid fa-circle-info"></i> 当前品牌官方实行平价直营策略，全周期套餐已是官方底价，无需输入优惠码，直达官网结算即享正品保障。</span>
+                </div>
+              </div>
+            </div>
+            '''
         
         if b.get('is_featured'):
             first_crumb = '<a href="https://colasaiko.github.io/Home/topic/tuijianjichang/index.html" target="_blank" rel="noopener" title="推荐机场主推榜">推荐机场主推榜</a>'
@@ -699,7 +823,10 @@ def build():
             <div class="detail-hero-main">
               <div class="eyebrow-pill">官方正品注册通道 · 独立落地页</div>
               <h1 class="detail-title">{e(b['name'])}</h1>
-              <p class="detail-intro">{e(text(intro))}</p>
+              <p class="detail-intro">{e(deep_subtitle)}</p>
+              
+              <!-- 专属优惠码放在副标题紧随下方 -->
+              {hero_coupon_html}
               
               <div class="detail-hero-cta">
                 <a class="btn-primary-buy" href="{e(b['aff'])}" target="_blank" rel="noopener">
