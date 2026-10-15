@@ -1,0 +1,24 @@
+{
+  "name": "jichangbuy",
+  "version": "1.0.0",
+  "description": "JichangBuy 独立品牌购买选购馆与落地页",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "preview": "node server.js",
+    "build": "python scripts/build_site.py",
+    "serve": "npx serve website/dist"
+  },
+  "keywords": [
+    "jichangbuy",
+    "airport",
+    "brands",
+    "pricing"
+  ],
+  "author": "Colasaiko",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

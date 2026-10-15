@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local / Backup files
+.source/
+
+# OS metadata
+.DS_Store
+Thumbs.db
