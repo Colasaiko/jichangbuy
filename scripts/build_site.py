@@ -195,8 +195,8 @@ def extract_chart_items(plans):
 FAVICON_SVG = """<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
   <rect width='64' height='64' fill='#141414'/>
   <rect x='6' y='6' width='52' height='52' fill='none' stroke='#A98A56' stroke-width='1'/>
-  <text x='32' y='39' text-anchor='middle' font-family='Marcellus, Georgia, serif' font-size='24' fill='#FAF9F6'>M</text>
-  <line x1='24' y1='46' x2='40' y2='46' stroke='#A98A56' stroke-width='1'/>
+  <text x='32' y='41' text-anchor='middle' font-family='Noto Serif SC, Songti SC, SimSun, serif' font-size='24' font-weight='700' fill='#FAF9F6'>买</text>
+  <line x1='22' y1='48' x2='42' y2='48' stroke='#A98A56' stroke-width='1'/>
 </svg>"""
 
 FAVICON_DATA_URI = "data:image/svg+xml," + urllib.parse.quote(FAVICON_SVG)
@@ -280,10 +280,10 @@ function filterCards() {
             expandWrap.style.display = 'flex';
             if (toggleBtn) {
                 if (isExpanded) {
-                    toggleBtn.innerHTML = '<span>COLLAPSE TO TOP TIER · 收起至主力推荐 9 家</span> <i class="fa-solid fa-chevron-up"></i>';
+                    toggleBtn.innerHTML = '<span>收起部分品牌（返回主力推荐 9 家）</span> <i class="fa-solid fa-chevron-up"></i>';
                 } else {
                     const remaining = matchCount - INITIAL_SHOW_COUNT;
-                    toggleBtn.innerHTML = '<span>EXPAND ALL MAISONS · 展开查看更多品牌 (' + remaining + ' 家)</span> <i class="fa-solid fa-chevron-down"></i>';
+                    toggleBtn.innerHTML = '<span>展开查看更多品牌（还有 ' + remaining + ' 家入库机场）</span> <i class="fa-solid fa-chevron-down"></i>';
                 }
             }
         } else {
@@ -293,9 +293,9 @@ function filterCards() {
     
     if (counter) {
         if (isDefaultAll && !isExpanded) {
-            counter.textContent = 'SHOWING ' + visibleCount + ' OF ' + matchCount + ' MAISONS · 主推 9 家';
+            counter.textContent = '显示前 ' + visibleCount + ' / ' + matchCount + ' 个主推品牌（折叠 26 家）';
         } else {
-            counter.textContent = 'SHOWING ' + visibleCount + ' / 35 MAISONS';
+            counter.textContent = '显示 ' + visibleCount + ' / 35 个品牌';
         }
     }
     if (noResult) noResult.style.display = visibleCount === 0 ? 'block' : 'none';
@@ -371,8 +371,8 @@ def shell(title, content, floating, prefix='', is_detail=False):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{e(title)} · Airport Mall (机场买买买！)</title>
-  <meta name="description" content="Airport Mall (机场买买买！) — Premium duty-free and luxury concierge experience for global connection. 2026最新全网稳定机场推荐与高性价比专线排行榜。">
+  <title>{e(title)} · 机场买买买！</title>
+  <meta name="description" content="2026最新全网稳定机场推荐与高性价比专线排行榜。收录35家主流科学上网机场，提供全专线、便宜月付套餐、独家优惠券与独立购买落地页。">
   <link rel="icon" href="{FAVICON_DATA_URI}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -385,21 +385,21 @@ def shell(title, content, floating, prefix='', is_detail=False):
   <header class="site-header">
     <div class="header-inner">
       <a class="wordmark" href="{prefix}index.html">
-        <span class="mark platinum-mark">M</span>
+        <span class="mark platinum-mark">买</span>
         <span class="brand-text">
-          <strong class="wordmark-title">AIRPORT MALL</strong>
-          <span class="wordmark-sub">DUTY-FREE & LUXURY CONCIERGE · 机场买买买！</span>
+          <strong class="wordmark-title">机场买买买！</strong>
+          <span class="wordmark-sub">机场精选品牌选购馆</span>
         </span>
       </a>
       <nav class="header-nav">
         <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/index.html" target="_blank" rel="noopener" class="nav-home-link" title="推荐机场主推榜：2026年最新全网高性价比优质稳定节点排行榜">
-          TOP TIER RANKING ↗
+          推荐机场主推榜 ↗
         </a>
         <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/brands/index.html" target="_blank" rel="noopener" class="nav-brands-link" title="全部机场品牌与套餐价格 | 品牌资料库">
-          BRAND ARCHIVE ↗
+          全部品牌资料库 ↗
         </a>
         <a href="{prefix}index.html#collection" class="nav-count">
-          COLLECTION <span class="badge">35</span>
+          全部品牌 <span class="badge">35</span>
         </a>
       </nav>
     </div>
@@ -409,22 +409,22 @@ def shell(title, content, floating, prefix='', is_detail=False):
     <div class="footer-inner">
       <div class="footer-brand">
         <a class="wordmark" href="{prefix}index.html">
-          <span class="mark platinum-mark">M</span>
+          <span class="mark platinum-mark">买</span>
           <span class="brand-text">
-            <strong class="wordmark-title">AIRPORT MALL</strong>
-            <span class="wordmark-sub">PLATINUM LOUNGE & LUXURY CONCIERGE</span>
+            <strong class="wordmark-title">机场买买买！选购中心</strong>
+            <span class="wordmark-sub">机场品牌独立选购馆</span>
           </span>
         </a>
-        <p>A curated concierge index accompanying the <a href="https://github.com/Colasaiko/Home" target="_blank" rel="noopener">Colasaiko/Home</a> repository. Independent dedicated dossiers, transparent telemetry, and verified concierge links.</p>
+        <p>为配套定制的独立品牌购买中心。每个品牌独立成页，参数透明，直达注册。</p>
       </div>
       <div class="footer-meta">
         <div class="footer-links">
-          <a href="{prefix}index.html">INDEX</a>
-          <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/index.html" target="_blank" rel="noopener">TOP TIER ↗</a>
-          <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/brands/index.html" target="_blank" rel="noopener">ARCHIVE ↗</a>
-          <a href="https://github.com/Colasaiko/Home" target="_blank" rel="noopener">GITHUB</a>
+          <a href="{prefix}index.html">返回首页</a>
+          <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/index.html" target="_blank" rel="noopener">推荐机场主推榜 ↗</a>
+          <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/brands/index.html" target="_blank" rel="noopener">全部品牌资料库 ↗</a>
+          <a href="https://github.com/Colasaiko/Home" target="_blank" rel="noopener">开源仓库 ↗</a>
         </div>
-        <span class="copyright">© 2026 AIRPORT MALL · PLATINUM LOUNGE CONCIERGE · ALL DATA VERIFIED AT MAISON CHECKOUT</span>
+        <span class="copyright">© 2026 机场买买买！ · 价格与数据均核验自各大品牌官方结算后台</span>
       </div>
     </div>
   </footer>
@@ -467,18 +467,18 @@ def build():
         # Price display
         plans = b.get('pricing', [])
         
-        month_txt = f"¥{b['min_month']:.2f}".rstrip('0').rstrip('.') + "/MO" if b.get('min_month') else "—"
-        year_txt = f"¥{b['min_year']:.2f}".rstrip('0').rstrip('.') + "/YR" if b.get('min_year') else "—"
+        month_txt = f"¥{b['min_month']:.2f}".rstrip('0').rstrip('.') + " /月起" if b.get('min_month') else "—"
+        year_txt = f"¥{b['min_year']:.2f}".rstrip('0').rstrip('.') + " /年起" if b.get('min_year') else "—"
         
-        coupon_badge_html = f'''<div class="card-coupon-badge" title="优惠码：{e(code)} {e(disc)}"><span class="coupon-tag-label">CODE</span> <span class="coupon-code-val">{e(code)}</span> <strong>{e(disc)}</strong></div>''' if code else '<div class="card-coupon-badge no-coupon"><span class="coupon-tag-label">STANDARD</span> 官方正价保障</div>'
+        coupon_badge_html = f'''<div class="card-coupon-badge" title="优惠码：{e(code)} {e(disc)}"><span class="coupon-tag-label">优惠码</span> <span class="coupon-code-val">{e(code)}</span> <strong>{e(disc)}</strong></div>''' if code else '<div class="card-coupon-badge no-coupon"><span class="coupon-tag-label">正价</span> 官方正价保障</div>'
         
         line_badge = text(b.get('lineType', [])) or '优质线路'
         
-        # 勋章标签：仅 9 大主力显示 TOP TIER，其余为 ARCHIVE
+        # 勋章标签：仅 9 大主力显示主力推荐，其余为精选入库
         if b.get('is_featured'):
-            ribbon_html = '<div class="card-ribbon top-tier">TOP TIER MAISON</div>'
+            ribbon_html = '<div class="card-ribbon top-tier">站长主力推荐</div>'
         else:
-            ribbon_html = '<div class="card-ribbon standard-tier">MAISON ARCHIVE</div>'
+            ribbon_html = '<div class="card-ribbon standard-tier">精选入库</div>'
         
         cards.append(f'''
         <article id="brand-{e(slug)}" class="brand-card {'is-top-brand' if b.get('is_featured') else ''}" data-tags="{filter_str}" data-name="{e(b['name'].lower())}" data-slug="{e(slug)}">
@@ -486,7 +486,7 @@ def build():
           <div class="card-header">
             <div class="card-symbol-wrap">
               <span class="brand-symbol">{e(b['name'][0])}</span>
-              <span class="card-order">N° {i+1:02d}</span>
+              <span class="card-order">第 {i+1:02d} 位</span>
             </div>
             <div class="card-tags">
               <span class="badge-line">{e(line_badge)}</span>
@@ -495,7 +495,6 @@ def build():
           
           <div class="card-title-wrap">
             <h3 class="card-name"><a href="brands/{slug}/index.html">{e(b['name'])}</a></h3>
-            {f'<span class="card-en">{e(b.get("englishName", ""))}</span>' if b.get("englishName") else ''}
           </div>
           
           <ul class="card-features">
@@ -504,12 +503,12 @@ def build():
           
           <div class="card-pricing-box">
             <div class="price-item">
-              <span class="price-label">MONTHLY</span>
+              <span class="price-label">月付起步</span>
               <strong class="price-val">{month_txt}</strong>
             </div>
             <div class="price-divider"></div>
             <div class="price-item">
-              <span class="price-label">ANNUAL</span>
+              <span class="price-label">年付优惠</span>
               <strong class="price-val">{year_txt}</strong>
             </div>
           </div>
@@ -520,10 +519,10 @@ def build():
           
           <div class="card-actions">
             <a class="btn-action btn-direct" href="{e(b['aff'])}" target="_blank" rel="noopener">
-              ENTER MAISON ↗
+              直达官网 ↗
             </a>
             <a class="btn-action btn-detail" href="brands/{slug}/index.html">
-              VIEW DOSSIER →
+              查看资料 ↗
             </a>
           </div>
         </article>
@@ -540,7 +539,7 @@ def build():
             orig_html = f'<span class="price-original">{e(orig)}</span>' if disc_price != '—' and disc_price != orig else f'<strong>{e(orig)}</strong>'
             disc_html = f'<strong class="price-discounted">{e(disc_price)}</strong>' if disc_price != '—' else '<span class="text-muted">—</span>'
             
-            status_badge = '<span class="badge-status badge-yes">ELIGIBLE</span>' if eligible is True else '<span class="badge-status badge-no">EXCLUDED</span>' if eligible is False else '<span class="badge-status badge-na">—</span>'
+            status_badge = '<span class="badge-status badge-yes">适用</span>' if eligible is True else '<span class="badge-status badge-no">不适用</span>' if eligible is False else '<span class="badge-status badge-na">—</span>'
             
             rows.append(f'''
             <tr>
@@ -556,7 +555,7 @@ def build():
               <td data-label="折后优惠价">{disc_html}</td>
               <td data-label="优惠码支持">{status_badge}</td>
               <td data-label="快捷选购">
-                <a class="btn-buy-row" href="{e(b['aff'])}" target="_blank" rel="noopener">SELECT ↗</a>
+                <a class="btn-buy-row" href="{e(b['aff'])}" target="_blank" rel="noopener">选购 ↗</a>
               </td>
             </tr>
             ''')
@@ -673,16 +672,16 @@ def build():
         intro = b.get('heroDescription') or b.get('serviceIntro') or b.get('description') or ' · '.join(b.get('features', [])[:3])
         
         if b.get('is_featured'):
-            first_crumb = '<a href="https://colasaiko.github.io/Home/topic/tuijianjichang/index.html" target="_blank" rel="noopener" title="推荐机场主推榜">TOP TIER RANKING</a>'
+            first_crumb = '<a href="https://colasaiko.github.io/Home/topic/tuijianjichang/index.html" target="_blank" rel="noopener" title="推荐机场主推榜">推荐机场主推榜</a>'
         else:
-            first_crumb = '<a href="https://colasaiko.github.io/Home/topic/tuijianjichang/brands/index.html" target="_blank" rel="noopener" title="全部机场品牌与套餐价格 | 品牌资料库">BRAND ARCHIVE</a>'
+            first_crumb = '<a href="https://colasaiko.github.io/Home/topic/tuijianjichang/brands/index.html" target="_blank" rel="noopener" title="全部机场品牌与套餐价格 | 品牌资料库">全部品牌资料库</a>'
         
         detail_content = f'''
         <main class="detail-container">
           <div class="detail-top-action-bar">
-            <a class="btn-top-big-back floating-back-icon-btn" href="../../index.html#brand-{slug}" onclick="if(window.history.length>1){{window.history.back();return false;}}" title="RETURN TO COLLECTION" aria-label="RETURN TO COLLECTION">
+            <a class="btn-top-big-back floating-back-icon-btn" href="../../index.html#brand-{slug}" onclick="if(window.history.length>1){{window.history.back();return false;}}" title="返回原本位置" aria-label="返回原本位置">
               <span class="floating-icon-arrow"><i class="fa-solid fa-arrow-left"></i></span>
-              <span class="floating-icon-text">RETURN TO COLLECTION · 返回原本位置</span>
+              <span class="floating-icon-text">返回原本位置</span>
             </a>
           </div>
           
@@ -691,24 +690,23 @@ def build():
             <span class="sep">/</span>
             <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/brands/{slug}/index.html" target="_blank" rel="noopener" title="{e(b['name'])}套餐价格与资料 | 机场品牌库">{e(b['name'])} 资料库</a>
             <span class="sep">/</span>
-            <a href="../../index.html" title="AIRPORT MALL">AIRPORT MALL</a>
+            <a href="../../index.html" title="机场买买买！">机场买买买！</a>
             <span class="sep">/</span>
-            <span class="current">{e(b['name'])} DOSSIER</span>
+            <span class="current">{e(b['name'])} 专属购买页</span>
           </nav>
           
           <section class="detail-hero-section">
             <div class="detail-hero-main">
-              <div class="eyebrow-pill">VERIFIED MAISON DOSSIER · 官方正品通道</div>
+              <div class="eyebrow-pill">官方正品注册通道 · 独立落地页</div>
               <h1 class="detail-title">{e(b['name'])}</h1>
-              {f'<p class="detail-en">{e(b.get("englishName",""))}</p>' if b.get("englishName") else ''}
               <p class="detail-intro">{e(text(intro))}</p>
               
               <div class="detail-hero-cta">
                 <a class="btn-primary-buy" href="{e(b['aff'])}" target="_blank" rel="noopener">
-                  VISIT OFFICIAL STORE · 直达官网选购 ↗
+                  直达官网选购 ↗
                 </a>
                 <a class="btn-secondary-link" href="#plans-table">
-                  VIEW {len(plans)} PLANS TABLE · 查看价格表 ↓
+                  查看 {len(plans)} 款套餐价格表 ↓
                 </a>
               </div>
             </div>
@@ -717,8 +715,8 @@ def build():
               <div class="summary-top">
                 <span class="brand-symbol lg">{e(b['name'][0])}</span>
                 <div>
-                  <div class="summary-label">MAISON RATING</div>
-                  <strong>VERIFIED IPLC / IEPL DEDICATED</strong>
+                  <div class="summary-label">品牌评级推荐</div>
+                  <strong>官方核验 · 专线高速节点</strong>
                 </div>
               </div>
               <ul class="summary-features">
@@ -726,7 +724,7 @@ def build():
               </ul>
               <div class="summary-purchase-btn">
                 <a href="{e(b['aff'])}" target="_blank" rel="noopener">
-                  CONNECT SERVICE ↗
+                  直达官方购买 ↗
                 </a>
               </div>
             </div>
@@ -824,26 +822,24 @@ def build():
     for idx_item, b_item in enumerate(top4):
         b_slug = b_item['slug']
         b_name = b_item['name']
-        b_en = b_item.get('englishName', '') or 'HAUTE NETWORK'
-        m_price = f"¥{b_item['min_month']:.2f}".rstrip('0').rstrip('.') + "/MO" if b_item.get('min_month') else "CURATED"
-        y_price = f"¥{b_item['min_year']:.2f}".rstrip('0').rstrip('.') + "/YR" if b_item.get('min_year') else ""
+        m_price = f"¥{b_item['min_month']:.2f}".rstrip('0').rstrip('.') + " /月起" if b_item.get('min_month') else "按量计费"
+        y_price = f"¥{b_item['min_year']:.2f}".rstrip('0').rstrip('.') + " /年起" if b_item.get('min_year') else ""
         price_line = f"{m_price} · {y_price}" if y_price else m_price
-        b_line = text(b_item.get('lineType', [])) or 'IPLC DEDICATED'
+        b_line = text(b_item.get('lineType', [])) or '专线线路'
         
         editorial_items_html.append(f'''
         <article class="editorial-card editorial-item-{idx_item+1}">
-          <div class="editorial-tag">N° 0{idx_item+1} · {e(b_line)}</div>
+          <div class="editorial-tag">第 0{idx_item+1} 位 · {e(b_line)}</div>
           <div class="editorial-visual">
             <span class="editorial-monogram">{e(b_name[0])}</span>
           </div>
           <div class="editorial-body">
-            <span class="editorial-en">{e(b_en)}</span>
             <h3 class="editorial-name"><a href="brands/{b_slug}/index.html">{e(b_name)}</a></h3>
             <p class="editorial-desc">{e(text(b_item.get('features', [])[:2]))}</p>
             <div class="editorial-price">{price_line}</div>
             <div class="editorial-actions">
-              <a href="brands/{b_slug}/index.html" class="editorial-link">DOSSIER →</a>
-              <a href="{e(b_item['aff'])}" target="_blank" rel="noopener" class="editorial-aff">ACCESS ↗</a>
+              <a href="brands/{b_slug}/index.html" class="editorial-link">查看详情 →</a>
+              <a href="{e(b_item['aff'])}" target="_blank" rel="noopener" class="editorial-aff">直达选购 ↗</a>
             </div>
           </div>
         </article>
@@ -852,8 +848,8 @@ def build():
     editorial_strip_html = f'''
     <section class="editorial-strip-section">
       <div class="section-meta-header">
-        <span class="meta-eyebrow">CURATED SELECTION · 主推四大家</span>
-        <span class="meta-caption">ASYMMETRIC EDITORIAL OVERVIEW</span>
+        <span class="meta-eyebrow">站长主力推荐四大家 · 优质专线</span>
+        <span class="meta-caption">精选主力品牌</span>
       </div>
       <div class="editorial-grid">
         {''.join(editorial_items_html)}
@@ -865,13 +861,13 @@ def build():
     <section class="concierge-reservation-band">
       <div class="concierge-inner">
         <div class="concierge-content">
-          <span class="concierge-eyebrow">FIRST-CLASS VIP CONCIERGE · 机场尊享礼宾服务</span>
-          <h3 class="concierge-title">Private Consultation, Enterprise Telemetry & Concierge Rates</h3>
+          <span class="concierge-eyebrow">站长专属礼宾服务 · 购买前后必读</span>
+          <h3 class="concierge-title">节点咨询、网络测速与安全核验</h3>
           <p class="concierge-subtitle">节点部署咨询 · 大额年付专属优惠券 · 独立防泄漏安全核验报告</p>
         </div>
         <div class="concierge-action">
           <a href="https://colasaiko.github.io/Home/topic/cybersecurity/index.html" target="_blank" rel="noopener" class="btn-concierge-gold">
-            RESERVE ADVISORY · 礼宾安全指南 ↗
+            网络安全与防泄漏指南 ↗
           </a>
         </div>
       </div>
@@ -885,39 +881,39 @@ def build():
       <section class="hero-banner">
         <div class="hero-left">
           <div class="hero-eyebrow">
-            HAUTE ÉDITION · 2026 VERIFIED NETWORK CONCIERGE · 35 CURATED HOUSES
+            2026 年度精选 · 全网 35 家主流机场实测档案 · 独立选购大厅
           </div>
           <h1 class="hero-title">
-            <span class="hero-en">The Platinum Network Index</span>
-            <span class="hero-sub">2026 稳定机场推荐 · 全网专线排行榜与极客购买指南</span>
+            <span class="hero-sub-title">2026 稳定机场推荐排行榜</span>
+            <span class="hero-sub">全网专线机场排行榜与极客购买指南</span>
           </h1>
           <p class="hero-desc">
-            First-class lounge restraint and quiet luxury for your global connection. 深度剖析全 IPLC 专线、IEPL 专线与优质 BGP 中转线路，精选稳定低延迟节点与按量计费不限时备用流量包。完美适配 Clash Verge / Meta、小火箭（Shadowrocket）与 Sing-box，原生解锁 4K 流媒体与 AI 生产力。
+            深度剖析全专线、高速中转线路，精选稳定低延迟节点与按量计费不限时备用流量包。完美适配各类主流客户端，原生解锁 4K 流媒体与 AI 生产力。
           </p>
           <div class="hero-actions">
             <a href="#collection" class="btn-ghost">
-              EXPLORE COLLECTION · 选购大厅 ↓
+              直达 35 个品牌选购大厅 ↓
             </a>
             <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/index.html" target="_blank" rel="noopener" class="btn-gold-outline" title="推荐机场主推榜">
-              TOP TIER RANKING ↗
+              推荐机场主推榜 ↗
             </a>
             <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/brands/index.html" target="_blank" rel="noopener" class="btn-ghost" title="全部机场品牌与套餐价格 | 品牌资料库">
-              BRAND ARCHIVE ↗
+              全部品牌资料库 ↗
             </a>
           </div>
         </div>
         
         <aside class="hero-stats-card">
-          <div class="stat-badge">VERIFIED ARCHIVE</div>
-          <div class="stat-number">35<span class="stat-unit">HOUSES</span></div>
+          <div class="stat-badge">实测收录</div>
+          <div class="stat-number">35<span class="stat-unit">家机场</span></div>
           <p class="stat-desc">
-            Nine flagship maisons curated for exceptional throughput. All 26 boutique houses indexed with transparent rates and verified credentials.
+            精选 9 家主力推荐旗舰品牌，全量收录 26 家精品机场，价格透明，参数真实核验。
           </p>
           <div class="stat-pills">
-            <span>IPLC DEDICATED</span>
-            <span>NO EXPIRY PACKS</span>
-            <span>CLASH & SURGE</span>
-            <span>AI UNLOCKED</span>
+            <span>高速专线</span>
+            <span>不限时流量包</span>
+            <span>多客户端适配</span>
+            <span>原生解锁 AI</span>
           </div>
         </aside>
       </section>
@@ -933,7 +929,7 @@ def build():
         <!-- 1. Why 为什么要知道 -->
         <div class="guide-box why-box">
           <div class="guide-box-header">
-            <span class="guide-pill">WHY / 核心价值</span>
+            <span class="guide-pill">核心价值与初衷</span>
             <h2>为什么你需要这份客观透明的 2026 机场推荐？</h2>
           </div>
           <div class="guide-grid-3">
@@ -958,7 +954,7 @@ def build():
         <!-- 2. How 如何科学选购 -->
         <div class="guide-box how-box">
           <div class="guide-box-header">
-            <span class="guide-pill">HOW / 选购方法论</span>
+            <span class="guide-pill">科学选购指南</span>
             <h2>四步挑选最适合你的科学上网与加速工具</h2>
           </div>
           <div class="how-steps">
@@ -988,12 +984,12 @@ def build():
         <!-- 3. 好处与坏处 (Pros & Cons) -->
         <div class="guide-box pros-cons-box">
           <div class="guide-box-header">
-            <span class="guide-pill">PROS & CONS / 理性预期</span>
+            <span class="guide-pill">客观对比与理性预期</span>
             <h2>购买专线机场的好处，以及你必须提前了解的“客观坏处”</h2>
           </div>
           <div class="pros-cons-grid">
             <div class="pro-card">
-              <h3 class="pro-title">PROS · 购买优质专线机场的好处</h3>
+              <h3 class="pro-title">优势 · 购买优质专线机场的好处</h3>
               <ul>
                 <li><strong>晚高峰不卡顿：</strong>内网专线不经过公网 GFW 过滤防火墙，敏感时期依然能保持超低延迟与 4K 秒开。</li>
                 <li><strong>原生 IP 完美解锁：</strong>解除 Netflix、Disney+ 等版权限制，告别访问 ChatGPT 时常见的“Access Denied”报错。</li>
@@ -1001,7 +997,7 @@ def build():
               </ul>
             </div>
             <div class="con-card">
-              <h3 class="con-title">CONS · 必须理解的“客观坏处与物理不可抗力”</h3>
+              <h3 class="con-title">须知 · 必须理解的“客观坏处与物理不可抗力”</h3>
               <ul>
                 <li><strong>物理海底光缆故障：</strong>亚太地区地震、海啸或渔船拖网意外切断跨国海缆时，国际出口会整体拥堵，任何神仙机场也无法避免。</li>
                 <li><strong>特殊敏感期防火墙严查：</strong>逢年过节或重大会议期间，国内入口中转机可能遭遇临时查封断流，需等待大厂切换备用入口。</li>
@@ -1014,7 +1010,7 @@ def build():
         <!-- 4. 30秒科普：为什么非高峰也会用不了 -->
         <div class="guide-box science-box">
           <div class="science-header">
-            <span class="guide-pill">TELEMETRY · 30 秒硬核极客科普</span>
+            <span class="guide-pill">硬核科普 · 30 秒读懂网络原理</span>
             <h2>为什么有时候明明不是晚高峰，节点却依然无法使用？</h2>
           </div>
           <p class="science-intro">很多用户以为节点变慢或失联一定是因为“网络拥挤”，但在非高峰期断流，通常是由于以下三大底层原因触发了安全风控或路由阻断：</p>
@@ -1040,7 +1036,7 @@ def build():
         <!-- 5. 温馨小提示 (维持网站运行与网络安全研究指引) -->
         <div class="guide-box notice-box">
           <div class="notice-header">
-            <span class="guide-pill">NOTICE · 站长温馨提示</span>
+            <span class="guide-pill">站长温馨提示</span>
             <h3>网站运营机制与购买前后安全必读</h3>
             <p>透明告知维护来源，并为您筑牢网络安全与隐私防线</p>
           </div>
@@ -1080,10 +1076,10 @@ def build():
         <div class="collection-toolbar">
           <div class="toolbar-header">
             <div>
-              <div class="toolbar-eyebrow">INDEPENDENT MAISONS ARCHIVE</div>
+              <div class="toolbar-eyebrow">独立品牌选购大厅</div>
               <h2 class="toolbar-title">探索全部机场品牌（各品牌独立成页，分开放置）</h2>
             </div>
-            <div id="search-counter" class="toolbar-count">SHOWING 35 / 35 MAISONS</div>
+            <div id="search-counter" class="toolbar-count">显示 35 / 35 个品牌</div>
           </div>
           
           <div class="toolbar-controls">
@@ -1093,14 +1089,14 @@ def build():
             </div>
             
             <div class="filter-tabs" id="filter-tabs">
-              <button type="button" class="tab-btn active" data-filter="all">ALL MAISONS (35)</button>
-              <button type="button" class="tab-btn" data-filter="featured">TOP TIER (9)</button>
-              <button type="button" class="tab-btn" data-filter="iplc">IPLC DEDICATED</button>
-              <button type="button" class="tab-btn" data-filter="iepl">IEPL DEDICATED</button>
-              <button type="button" class="tab-btn" data-filter="bgp">BGP TRANSIT</button>
-              <button type="button" class="tab-btn" data-filter="coupon">WITH PRIVILEGE</button>
-              <button type="button" class="tab-btn" data-filter="budget">ACCESSIBLE (≤¥20)</button>
-              <button type="button" class="tab-btn" data-filter="onetime">NO EXPIRY PACKS</button>
+              <button type="button" class="tab-btn active" data-filter="all">全部品牌 (35)</button>
+              <button type="button" class="tab-btn" data-filter="featured">站长主力推荐 (9家)</button>
+              <button type="button" class="tab-btn" data-filter="iplc">全专线架构</button>
+              <button type="button" class="tab-btn" data-filter="iepl">专线线路</button>
+              <button type="button" class="tab-btn" data-filter="bgp">中转线路</button>
+              <button type="button" class="tab-btn" data-filter="coupon">有专属优惠券</button>
+              <button type="button" class="tab-btn" data-filter="budget">高性价比 (≤20元/月)</button>
+              <button type="button" class="tab-btn" data-filter="onetime">不限时流量包</button>
             </div>
           </div>
         </div>
@@ -1111,15 +1107,15 @@ def build():
         
         <div class="expand-brands-wrap" id="expand-brands-wrap">
           <button type="button" class="btn-expand-brands" id="btn-toggle-expand" onclick="toggleExpandBrands()">
-            <span>EXPAND ALL MAISONS · 展开查看更多品牌 (26 家)</span>
+            <span>展开查看更多品牌 (26 家)</span>
             <i class="fa-solid fa-chevron-down"></i>
           </button>
         </div>
         
         <div id="no-result" class="no-result-box" style="display: none;">
-          <h3>NO MATCHING MAISON FOUND</h3>
+          <h3>未找到匹配的机场品牌</h3>
           <p>请尝试搜索其他关键字，或切换分类筛选标签。</p>
-          <button type="button" class="btn-reset-search" onclick="resetFilters()">RESET ALL FILTERS</button>
+          <button type="button" class="btn-reset-search" onclick="resetFilters()">重置所有筛选条件</button>
         </div>
       </section>
     </main>
@@ -1127,8 +1123,8 @@ def build():
     '''
     
     index_floating = '''
-    <a class="floating-quick-btn" href="#collection" title="EXPLORE COLLECTION">
-      <span class="floating-btn-text">COLLECTION ↓</span>
+    <a class="floating-quick-btn" href="#collection" title="浏览全部品牌">
+      <span class="floating-btn-text">选购大厅 ↓</span>
     </a>
     '''
     
