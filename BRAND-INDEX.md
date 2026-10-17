@@ -11,7 +11,7 @@
 | 01 | **微风网络** | 👑 站长主力 | IPLC | VLESS | ¥25 | ¥127 | ✅ 支持 | `weifeng90` (7折) | [查看独立落地页](website/dist/brands/weifeng/index.html) | [直达购买 / 注册 ↗](https://edp01.breezenetaff.com/#/?code=bSnymFll) |
 | 02 | **飞猫云** | 👑 站长主力 | IPLC | VLESS | ¥25 | ¥84 | — | `flycat888` (8折) | [查看独立落地页](website/dist/brands/feimao/index.html) | [直达购买 / 注册 ↗](https://flycat1.flycatvipaff.cc/#/?code=UUcH5yh9) |
 | 03 | **暮光加速** | 👑 站长主力 | 优质线路 | Shadowsocks | ¥20 | ¥103 | ✅ 支持 | `mm88` (8折) | [查看独立落地页](website/dist/brands/muguang/index.html) | [直达购买 / 注册 ↗](https://varnexa.twilightaff.com/#/?code=1eGqV85O) |
-| 04 | **大佬云** | 👑 站长主力 | IPLC | 常见协议 | ¥23 | ¥96 | ✅ 支持 | `dly888` (7折) | [查看独立落地页](website/dist/brands/dalao/index.html) | [直达购买 / 注册 ↗](https://a01vipaff.dalaoyunaff.com/#/?code=gH3nsEyP) |
+| 04 | **大佬云** | 👑 站长主力 | IPLC | 常见协议 | ¥23 | ¥96 | ✅ 支持 | `dly888` (7折) | [查看独立落地页](website/dist/brands/dalao/index.html) | [直达购买 / 注册 ↗](https://a01vipaff.dalaoyunaff.com/#/?code=4hRU02Tt) |
 | 05 | **FireFly 萤火虫** | 👑 站长主力 | IPLC | VLESS | ¥25 | ¥96 | ✅ 支持 | `firefly` (8折) | [查看独立落地页](website/dist/brands/firefly/index.html) | [直达购买 / 注册 ↗](https://vip02.fireflyaff.com/#/?code=mcYQUZxG) |
 | 06 | **灵猫** | 👑 站长主力 | IPLC | 常见协议 | ¥25 | ¥85 | ✅ 支持 | `lingmao` (8折) | [查看独立落地页](website/dist/brands/lingmao/index.html) | [直达购买 / 注册 ↗](https://vip02.civetaff.com/#/?code=2Ai6V6Ub) |
 | 07 | **闪跃** | 👑 站长主力 | IPLC | 常见协议 | ¥24 | ¥96 | ✅ 支持 | `shanyue` (8折) | [查看独立落地页](website/dist/brands/shanyue/index.html) | [直达购买 / 注册 ↗](https://vip02.flashleapaff.com/#/?code=hCwClNUi) |

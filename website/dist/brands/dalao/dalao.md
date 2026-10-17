@@ -13,7 +13,7 @@ sourceType: "user-provided"
 sourceDate: "2026-10-06"
 updatedAt: "2026-10-09"
 sourceNote: "用户在本聊天室提供的六张套餐截图与专属优惠说明；未重新核验当前官网结算页面。"
-aff: "https://a01vipaff.dalaoyunaff.com/#/?code=gH3nsEyP"
+aff: "https://a01vipaff.dalaoyunaff.com/#/?code=4hRU02Tt"
 lineType:
   - "IPLC"
 features:
@@ -29,7 +29,7 @@ aiSupport:
   - "ChatGPT"
 purchase:
   label: "快速购买"
-  url: "https://a01vipaff.dalaoyunaff.com/#/?code=gH3nsEyP"
+  url: "https://a01vipaff.dalaoyunaff.com/#/?code=4hRU02Tt"
   cloaked: true
 coupon:
   code: "dly888"
@@ -121,9 +121,9 @@ pricing:
 
 ## 注册与购买
 
-[大佬云注册与购买入口](https://a01vipaff.dalaoyunaff.com/#/?code=gH3nsEyP)
+[大佬云注册与购买入口](https://a01vipaff.dalaoyunaff.com/#/?code=4hRU02Tt)
 
-该链接为 AFF 推广链接，完整保留推荐参数 `gH3nsEyP`。符合推广条件的购买可能产生推广佣金。
+该链接为 AFF 推广链接，完整保留推荐参数 `4hRU02Tt`。符合推广条件的购买可能产生推广佣金。
 
 ## 专属优惠码
 

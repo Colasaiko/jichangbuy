@@ -373,6 +373,7 @@ def shell(title, content, floating, prefix='', is_detail=False):
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>{e(title)} · 机场买买买！</title>
   <meta name="description" content="2026最新全网稳定机场推荐与高性价比专线排行榜。收录35家主流科学上网机场，提供全专线、便宜月付套餐、独家优惠券与独立购买落地页。">
+  <meta name="robots" content="index, follow">
   <link rel="icon" href="{FAVICON_DATA_URI}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -606,7 +607,7 @@ def build():
           </div>
           
           <div class="card-actions">
-            <a class="btn-action btn-direct" href="{e(b['aff'])}" target="_blank" rel="noopener">
+            <a class="btn-action btn-direct" href="{e(b['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer">
               直达官网 ↗
             </a>
             <a class="btn-action btn-detail" href="brands/{slug}/index.html">
@@ -643,7 +644,7 @@ def build():
               <td data-label="折后优惠价">{disc_html}</td>
               <td data-label="优惠码支持">{status_badge}</td>
               <td data-label="快捷选购">
-                <a class="btn-buy-row" href="{e(b['aff'])}" target="_blank" rel="noopener">选购 ↗</a>
+                <a class="btn-buy-row" href="{e(b['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer">选购 ↗</a>
               </td>
             </tr>
             ''')
@@ -684,7 +685,7 @@ def build():
                 {orig_span}
                 {disc_span}
               </div>
-              <a class="btn-chart-buy" href="{e(b['aff'])}" target="_blank" rel="noopener">选购 ↗</a>
+              <a class="btn-chart-buy" href="{e(b['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer">选购 ↗</a>
             </div>
             ''')
             
@@ -747,7 +748,7 @@ def build():
               </div>
               <div class="coupon-right">
                 <div class="coupon-discount-tag">{e(cdisc)}</div>
-                <a class="btn-coupon-use" href="{e(b['aff'])}" target="_blank" rel="noopener">去结算 ↗</a>
+                <a class="btn-coupon-use" href="{e(b['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer">去结算 ↗</a>
               </div>
             </div>
             '''
@@ -757,6 +758,7 @@ def build():
         body = re.sub(r'\[([^\]]+)\]\(/(?:ai|streaming|dedicated-line|guides)\)', r'\1', body)
         article = markdown.markdown(body, extensions=['tables', 'fenced_code', 'sane_lists'])
         article = re.sub(r'(<table>.*?</table>)', r'<div class="article-table-wrap">\1</div>', article, flags=re.S)
+        article = re.sub(r'<a\s+href="([^"]+)"', r'<a href="\1" target="_blank" rel="nofollow sponsored noopener noreferrer"', article)
         
         # Hero coupon box placed directly below the subtitle
         if code:
@@ -829,7 +831,7 @@ def build():
               {hero_coupon_html}
               
               <div class="detail-hero-cta">
-                <a class="btn-primary-buy" href="{e(b['aff'])}" target="_blank" rel="noopener">
+                <a class="btn-primary-buy" href="{e(b['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer">
                   直达官网选购 ↗
                 </a>
                 <a class="btn-secondary-link" href="#plans-table">
@@ -850,7 +852,7 @@ def build():
                 {''.join(f'<li><span class="bullet-dash">—</span> {e(x)}</li>' for x in b.get('features',[])[:4])}
               </ul>
               <div class="summary-purchase-btn">
-                <a href="{e(b['aff'])}" target="_blank" rel="noopener">
+                <a href="{e(b['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer">
                   直达官方购买 ↗
                 </a>
               </div>
@@ -933,7 +935,7 @@ def build():
             <span class="floating-brand">{e(b['name'])}</span>
             <span class="floating-tip">{e(f"券码：{code} ({disc})" if code else "官方正品保障 · 即开即用")}</span>
           </div>
-          <a class="btn-floating-cta" href="{e(b['aff'])}" target="_blank" rel="noopener">
+          <a class="btn-floating-cta" href="{e(b['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer">
             <span class="pulse-dot"></span>
             <span>立即购买 / 注册</span>
             <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -966,7 +968,7 @@ def build():
             <div class="editorial-price">{price_line}</div>
             <div class="editorial-actions">
               <a href="brands/{b_slug}/index.html" class="editorial-link">查看详情 →</a>
-              <a href="{e(b_item['aff'])}" target="_blank" rel="noopener" class="editorial-aff">直达选购 ↗</a>
+              <a href="{e(b_item['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer" class="editorial-aff">直达选购 ↗</a>
             </div>
           </div>
         </article>
