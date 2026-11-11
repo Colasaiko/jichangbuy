@@ -4,45 +4,46 @@ slug: feiv
 order: 26
 seoTitle: FlyV (飞V) 怎么样？2026 最新套餐价格与 fly20 优惠码实测
 seoDescription: >-
-  详细介绍 FlyV 机场，多链路 BGP 调度及专线架构，不限设备，原生 IP 解锁 Netflix/ChatGPT，附最新 9 个套餐价格及 fly20
-  优惠码使用指南。
-h1: FlyV (飞V) 怎么样？多链路专线架构、套餐价格与优惠码
+  飞V（FlyV）机场：年付轻量版 ¥99/年，每天不到 3 毛；新用户首单 fly20 八折，入门月付 ¥25 降到 ¥20。港台日新专线、5 地区 60 节点，官方客户端账号登录即用。
+h1: 飞V（FlyV）怎么样？每天不到 3 毛、首单月付 ¥20 的专线机场
 heroDescription: >-
-  FlyV（飞V）提供多链路 BGP 调度及专线架构，部分套餐明确标注 IEPL/IPLC 专线，原生 IP 全面解锁流媒体与 AI
-  场景。且不限制在线设备数，最高支持 4K/8K 流媒体。新客可使用 fly20 享 8 折优惠。
-lineType: 多链路BGP调度及专线架构
+  年付轻量版 ¥99/年，每天不到 3 毛；新用户首单用 fly20 打 8 折，入门方案月付从 ¥25 降到 ¥20。飞V（FlyV）覆盖香港、台湾、日本、新加坡、美国 5 个地区共 60 个节点，港台为 IEPL 专线，日本、新加坡为 IPLC/IEPL 专线。官方专属客户端账号登录即用，常规周期套餐不限在线设备数。
+promo:
+  pitch: '专线年付 ¥99，每天不到 3 毛；新用户首单用 fly20，入门月付 ~~¥25~~ ¥20。'
+  priceLine: '每天不到 3 毛 · 首单月付 ~~¥25~~ ¥20'
+  priceBox:
+    - label: 首单月付
+      value: '~~¥25~~ ¥20 /月'
+    - label: 年付每天
+      value: '¥0.27 /天'
+lineType: IEPL / IPLC 专线
 maxBandwidth: 不限速
 ipType: 原生IP
 deviceLimit: 不限在线设备数
-customerSupport: 官方技术支持
-trafficReset: 根据套餐周期
-clientSupport: 具体兼容性以官方当前支持情况为准
+customerSupport: 官网用户中心工单
+trafficReset: 周期套餐每月重置流量，剩余不结转；用完可购同档重置包（价格等于该档月付价）
+clientSupport: 官方专属客户端（Windows / macOS / Android / iOS），账号登录即用，无需手动导入订阅；电视盒子、软路由等设备可联系客服确认
 streamingSupport:
   - Netflix
+  - Disney+
+  - YouTube Premium
   - Prime Video
-  - BBC
   - Abema
   - TVer
-  - YouTube Premium
-  - Disney+
 aiSupport:
   - ChatGPT
-  - ChatGPT 4
-  - ChatGPT Plus
   - Claude
-  - Claude Opus
-  - GitHub Copilot
-  - Hugging Face
   - Midjourney
+  - GitHub Copilot
 features:
-  - 当前套餐以多链路 BGP 调度及专线架构为主要特点
-  - 部分套餐页面明确标注 IEPL / IPLC 专线
-  - 部分套餐明确采用 / 描述 Shadowsocks 协议
-  - 全节点统一 1x 计费倍率（依各套餐页面说明）
-  - 提供原生 IP，支持 Netflix 等全面流媒体解锁
-  - '支持高阶 AI 开发者场景（如 ChatGPT 4, Claude Opus, GitHub Copilot）'
-  - 不限制在线设备数（常规套餐）
-  - fly20 优惠码当前实测适用于入门、进阶、高端、商业四个常规周期套餐；其他套餐当前不可用，官方未公布优惠截止日期。
+  - '5 个地区、60 个节点：香港 20、台湾 10、日本 10、新加坡 10、美国 10'
+  - '香港、台湾为 IEPL 专线；日本、新加坡为 IPLC / IEPL 专线；美国为 BGP 直连优化'
+  - '官方专属客户端覆盖 Windows / macOS / Android / iOS，账号登录一键连接，分流规则已内置'
+  - '免去复制订阅、手动导入配置的步骤，新手也能开箱即用'
+  - '常规周期套餐全节点 1× 倍率，不限同时在线设备数（各设备共享流量）'
+  - '周期套餐每月重置流量，剩余不结转；用完可购买同档重置包，价格等于该档月付价'
+  - '品牌称使用原生 IP，可用于主流流媒体及 ChatGPT、Claude 等 AI 工具（可用性不作持续保证）'
+  - 'fly20 为新用户首单 8 折，每个账号限用一次，仅适用于入门、进阶、高端、商业四档周期套餐（含长周期）。'
 purchase:
   label: 快速购买
   url: 'https://varnexa.flyvaff.com/#/?code=6ae5FH9i'
@@ -51,9 +52,9 @@ coupon:
   code: fly20
   discountPercent: 20%
   discount: 8折
-  scope: 新客专属；官方称限时优惠但未公布截止日期
-  description: fly20 为新客 8 折优惠码，目前实测可用于入门、进阶、高端和商业四个常规周期套餐；年付轻量版、一次性流量包和独享黄金专线当前不可用。
-  label: 新客专属 8 折
+  scope: 新用户首单专属，每个账号限用一次
+  description: fly20 为新用户首单 8 折优惠码，每个账号限用一次，适用于入门、进阶、高端、商业四档周期套餐（含季付至三年付）；不适用于年付轻量版、不限时流量包和独享黄金专线。在结算页填写，实付以结算页为准。
+  label: 新用户首单 8 折
   eligiblePlans:
     - FlyV 会员 - 入门方案
     - FlyV 会员 - 进阶方案
@@ -326,11 +327,12 @@ visualData:
         price: 680
 ---
 
-根据当前收录的官方品牌资料及购买页面实测，**FlyV (飞V)** 提供了细分的网络加速方案。从超低门槛的年付轻量版，到原生 IP 独享黄金专线，覆盖不同场景。
+根据飞V品牌提供的资料（整理于 2026-11-09）及购买页面信息，**FlyV（飞V）** 主打专线线路和官方客户端，用账号登录即可使用。以下为品牌说明，套餐、节点与优惠以官网和结算页为准。
 
 ### 已知服务特征
-- **多链路 BGP 调度及专线架构**：FlyV 当前套餐以多链路 BGP 调度及专线架构为主要特点，部分套餐页面明确标注 IEPL / IPLC 专线，保障高峰期体验。
-- **协议说明**：部分套餐页面明确采用/描述 Shadowsocks 协议，提供稳定的科学上网体验。
-- **流媒体与 AI 解锁**：提供原生 IP，支持 Netflix、Prime Video、BBC、YouTube Premium 等全面流媒体解锁；原生支持 ChatGPT 4、Claude Opus、GitHub Copilot、Midjourney 等开发者高频 AI 工具。
-- **设备与网络并发**：常规套餐不限制在线设备数（具体依官方套餐详情为准），支持高并发及多终端/团队使用场景；全节点统一 1x 计费倍率。
-- **优惠码特别提示**：目前新客专享 8 折优惠码 **fly20**，实测可用于入门、进阶、高端和商业四个常规周期套餐的常规付款周期。*注意：年付轻量版、一次性流量包以及独享黄金专线等暂不可用。官方称限时优惠，但未公布具体截止日期。*
+- **线路与节点**：覆盖 5 个地区共 60 个节点：香港 IEPL 专线 20 个、台湾 IEPL 专线 10 个、日本 IPLC/IEPL 专线 10 个、新加坡 IPLC/IEPL 专线 10 个、美国 BGP 直连优化 10 个。节点当前状态可在官网检测。
+- **官方专属客户端**：覆盖 Windows、macOS、Android、iOS，用飞V账号登录即可一键连接，分流规则已内置，无需复制订阅链接或手动导入配置。电视盒子、软路由等设备可联系客服确认支持情况。客户端请从官网用户中心下载，确保为正版安全版本。
+- **设备与流量**：常规周期套餐全节点 1× 倍率，不限同时在线设备数，各设备共享套餐流量。周期套餐每月重置流量，剩余不结转；月内用完可购买同档重置包，价格等于该档月付价。
+- **流媒体与 AI**：品牌称使用原生 IP，流媒体包括 Netflix、Disney+、YouTube Premium、Prime Video、Abema、TVer；AI 工具包括 ChatGPT、Claude、Midjourney、GitHub Copilot 等。速度、稳定性及解锁情况不作持续保证，以实际使用为准。
+- **优惠码 fly20**：新用户首单 8 折，每个账号限用一次，仅适用于入门、进阶、高端、商业四档周期套餐（含长周期）；不适用于年付轻量版、不限时流量包和独享黄金专线。在结算页填写，实付以结算页为准。
+- **官方渠道**：客服为官网用户中心工单，品牌说明客服不会私下索要账号凭证。网上出售的“飞V订阅链接”、网盘分发的“飞V客户端”均非官方渠道；遇到“¥9.9/月”“1 折码”“全场免费”等宣传，请回官网核验。

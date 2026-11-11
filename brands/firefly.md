@@ -113,72 +113,168 @@ pricing:
     traffic: "150GB/月"
     period: "月付"
     originalPrice: "¥25"
+    discountPrice: "¥20.00"
     couponEligible: true
 
   - name: "Firefly Lite"
     traffic: "150GB/月"
     period: "季付"
     originalPrice: "¥67"
+    discountPrice: "¥53.60"
+    couponEligible: true
+
+  - name: "Firefly Lite"
+    traffic: "150GB/月"
+    period: "半年付"
+    originalPrice: "¥127"
+    discountPrice: "¥101.60"
     couponEligible: true
 
   - name: "Firefly Lite"
     traffic: "150GB/月"
     period: "年付"
     originalPrice: "¥240"
+    discountPrice: "¥192.00"
+    couponEligible: true
+
+  - name: "Firefly Lite"
+    traffic: "150GB/月"
+    period: "二年付"
+    originalPrice: "¥420"
+    discountPrice: "¥336.00"
+    couponEligible: true
+
+  - name: "Firefly Lite"
+    traffic: "150GB/月"
+    period: "三年付"
+    originalPrice: "¥540"
+    discountPrice: "¥432.00"
     couponEligible: true
 
   - name: "Firefly Plus"
     traffic: "300GB/月"
     period: "月付"
     originalPrice: "¥45"
+    discountPrice: "¥36.00"
     couponEligible: true
 
   - name: "Firefly Plus"
     traffic: "300GB/月"
     period: "季付"
     originalPrice: "¥121"
+    discountPrice: "¥96.80"
+    couponEligible: true
+
+  - name: "Firefly Plus"
+    traffic: "300GB/月"
+    period: "半年付"
+    originalPrice: "¥229"
+    discountPrice: "¥183.20"
     couponEligible: true
 
   - name: "Firefly Plus"
     traffic: "300GB/月"
     period: "年付"
     originalPrice: "¥432"
+    discountPrice: "¥345.60"
+    couponEligible: true
+
+  - name: "Firefly Plus"
+    traffic: "300GB/月"
+    period: "二年付"
+    originalPrice: "¥756"
+    discountPrice: "¥604.80"
+    couponEligible: true
+
+  - name: "Firefly Plus"
+    traffic: "300GB/月"
+    period: "三年付"
+    originalPrice: "¥972"
+    discountPrice: "¥777.60"
     couponEligible: true
 
   - name: "Firefly Blaze"
     traffic: "600GB/月"
     period: "月付"
     originalPrice: "¥85"
+    discountPrice: "¥68.00"
     couponEligible: true
 
   - name: "Firefly Blaze"
     traffic: "600GB/月"
     period: "季付"
     originalPrice: "¥229"
+    discountPrice: "¥183.20"
+    couponEligible: true
+
+  - name: "Firefly Blaze"
+    traffic: "600GB/月"
+    period: "半年付"
+    originalPrice: "¥433"
+    discountPrice: "¥346.40"
     couponEligible: true
 
   - name: "Firefly Blaze"
     traffic: "600GB/月"
     period: "年付"
     originalPrice: "¥816"
+    discountPrice: "¥652.80"
+    couponEligible: true
+
+  - name: "Firefly Blaze"
+    traffic: "600GB/月"
+    period: "二年付"
+    originalPrice: "¥1428"
+    discountPrice: "¥1142.40"
+    couponEligible: true
+
+  - name: "Firefly Blaze"
+    traffic: "600GB/月"
+    period: "三年付"
+    originalPrice: "¥1836"
+    discountPrice: "¥1468.80"
     couponEligible: true
 
   - name: "Firefly Nova"
     traffic: "1000GB/月"
     period: "月付"
     originalPrice: "¥150"
+    discountPrice: "¥120.00"
     couponEligible: true
 
   - name: "Firefly Nova"
     traffic: "1000GB/月"
     period: "季付"
     originalPrice: "¥400"
+    discountPrice: "¥320.00"
+    couponEligible: true
+
+  - name: "Firefly Nova"
+    traffic: "1000GB/月"
+    period: "半年付"
+    originalPrice: "¥750"
+    discountPrice: "¥600.00"
     couponEligible: true
 
   - name: "Firefly Nova"
     traffic: "1000GB/月"
     period: "年付"
     originalPrice: "¥1360"
+    discountPrice: "¥1088.00"
+    couponEligible: true
+
+  - name: "Firefly Nova"
+    traffic: "1000GB/月"
+    period: "二年付"
+    originalPrice: "¥2399"
+    discountPrice: "¥1919.20"
+    couponEligible: true
+
+  - name: "Firefly Nova"
+    traffic: "1000GB/月"
+    period: "三年付"
+    originalPrice: "¥3119"
+    discountPrice: "¥2495.20"
     couponEligible: true
 
   - name: "Firefly不限时"
@@ -258,15 +354,40 @@ FireFly 采用 IPLC 专线，使用 VLESS 协议，官方资料显示全节点�
 
 FireFly 当前共提供 6 种套餐，包括 5 种按月刷新流量的常规套餐和 1 种不限时固定总量包。
 
-### 常规月流量套餐
+### 常规月流量套餐原价表
 
-| 套餐名称 | 月流量 | 月付 | 季付 | 年付 |
-|---------|--------|------|------|------|
-| Firefly年付版 | 60GB | — | — | ¥96 |
-| Firefly Lite | 150GB | ¥25 | ¥67 | ¥240 |
-| Firefly Plus | 300GB | ¥45 | ¥121 | ¥432 |
-| Firefly Blaze | 600GB | ¥85 | ¥229 | ¥816 |
-| Firefly Nova | 1000GB | ¥150 | ¥400 | ¥1360 |
+以下均为对应购买周期的一次性付款金额，单位为人民币；流量为每月额度，选择较长周期不会改变每月流量。“—”表示当前资料未提供该选项。
+
+| 套餐名称 | 月流量 | 月付 | 季付 | 半年付 | 年付 | 二年付 | 三年付 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Firefly年付版 | 60GB | — | — | — | ¥96 | — | — |
+| Firefly Lite | 150GB | ¥25 | ¥67 | ¥127 | ¥240 | ¥420 | ¥540 |
+| Firefly Plus | 300GB | ¥45 | ¥121 | ¥229 | ¥432 | ¥756 | ¥972 |
+| Firefly Blaze | 600GB | ¥85 | ¥229 | ¥433 | ¥816 | ¥1428 | ¥1836 |
+| Firefly Nova | 1000GB | ¥150 | ¥400 | ¥750 | ¥1360 | ¥2399 | ¥3119 |
+
+### 常规月流量套餐折后价表（新用户 8 折）
+
+以下沿用文件现有优惠码 `firefly` 的新用户 8 折规则计算：折后价 = 原价 × 0.8。Firefly年付版不参与优惠；此次截图未展示优惠码结算结果，实际适用情况以结账页面为准。
+
+| 套餐名称 | 月流量 | 月付 | 季付 | 半年付 | 年付 | 二年付 | 三年付 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Firefly年付版 | 60GB | — | — | — | 不适用 | — | — |
+| Firefly Lite | 150GB | ¥20.00 | ¥53.60 | ¥101.60 | ¥192.00 | ¥336.00 | ¥432.00 |
+| Firefly Plus | 300GB | ¥36.00 | ¥96.80 | ¥183.20 | ¥345.60 | ¥604.80 | ¥777.60 |
+| Firefly Blaze | 600GB | ¥68.00 | ¥183.20 | ¥346.40 | ¥652.80 | ¥1142.40 | ¥1468.80 |
+| Firefly Nova | 1000GB | ¥120.00 | ¥320.00 | ¥600.00 | ¥1088.00 | ¥1919.20 | ¥2495.20 |
+
+### 重置流量包
+
+| 对应套餐 | 重置流量包原价 |
+|---|---:|
+| Firefly Lite | ¥25 |
+| Firefly Plus | ¥45 |
+| Firefly Blaze | ¥85 |
+| Firefly Nova | ¥150 |
+
+截图未确认重置流量包是否支持优惠码，因此暂不列折后价；具体重置规则请向官方客服确认。
 
 ### 不限时固定总量包
 
@@ -275,18 +396,6 @@ FireFly 当前共提供 6 种套餐，包括 5 种按月刷新流量的常规套
 | Firefly不限时 | 100GB | 一次性 | ¥100 |
 
 优惠码 `firefly` 适用于符合条件的常规套餐；Firefly年付版与 Firefly不限时不参与优惠。
-
-### 使用 firefly 后的年付参考价
-
-| 套餐 | 原价 | 8折后 | 节省 |
-|------|------|-------|------|
-| 年付版 | ¥96 | 不适用 | - |
-| Lite | ¥240 | ¥192 | ¥48 |
-| Plus | ¥432 | ¥345.60 | ¥86.40 |
-| Blaze | ¥816 | ¥652.80 | ¥163.20 |
-| Nova | ¥1360 | ¥1088 | ¥272 |
-
-> 8 折价依据官方"新用户使用优惠码 firefly 享 8 折"规则计算。如果当前结算系统针对某个套餐有例外，则以实际结算页为准。
 
 ## Firefly 年付版为什么是 ¥8/月？
 
@@ -298,19 +407,19 @@ Firefly 年付版定价为 **¥96/年**，包含每月 60GB 流量。
 
 ## FireFly Lite 适合谁？
 
-Firefly Lite 提供 **150GB/月** 流量，月付 ¥25、季付 ¥67、年付 ¥240。适合普通个人用户，满足日常网页浏览、社交媒体、轻量视频观看等需求。如果每月流量消耗在 150GB 以内，Lite 是性价比较高的入门选择。
+Firefly Lite 提供 **150GB/月** 流量，月付 ¥25、季付 ¥67、半年付 ¥127、年付 ¥240、二年付 ¥420、三年付 ¥540。适合普通个人用户，满足日常网页浏览、社交媒体、轻量视频观看等需求。如果每月流量消耗在 150GB 以内，Lite 是性价比较高的入门选择。
 
 ## FireFly Plus 适合谁？
 
-Firefly Plus 提供 **300GB/月** 流量，月付 ¥45、季付 ¥121、年付 ¥432。适合中等流量需求的用户，例如经常观看在线视频、使用 AI 工具、需要多设备同时连接的场景。
+Firefly Plus 提供 **300GB/月** 流量，月付 ¥45、季付 ¥121、半年付 ¥229、年付 ¥432、二年付 ¥756、三年付 ¥972。适合中等流量需求的用户，例如经常观看在线视频、使用 AI 工具、需要多设备同时连接的场景。
 
 ## FireFly Blaze 适合谁？
 
-Firefly Blaze 提供 **600GB/月** 流量，月付 ¥85、季付 ¥229、年付 ¥816。适合高频视频用户或多设备重度使用场景，如家庭多成员共用、长时间 4K 流媒体观看等。
+Firefly Blaze 提供 **600GB/月** 流量，月付 ¥85、季付 ¥229、半年付 ¥433、年付 ¥816、二年付 ¥1428、三年付 ¥1836。适合高频视频用户或多设备重度使用场景，如家庭多成员共用、长时间 4K 流媒体观看等。
 
 ## FireFly Nova 适合谁？
 
-Firefly Nova 提供 **1000GB/月** 流量，月付 ¥150、季付 ¥400、年付 ¥1360。适合大流量用户，例如需要大量下载、远程办公传输大文件、团队多人使用等场景。
+Firefly Nova 提供 **1000GB/月** 流量，月付 ¥150、季付 ¥400、半年付 ¥750、年付 ¥1360、二年付 ¥2399、三年付 ¥3119。适合大流量用户，例如需要大量下载、远程办公传输大文件、团队多人使用等场景。
 
 ## FireFly 不限时是什么？
 

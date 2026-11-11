@@ -9,7 +9,7 @@ features:
 title: "无忧链接怎么样？2026 IPLC 专线、套餐价格、不限时流量与客户端测评 | 海外机场"
 description: "无忧链接采用全 IPLC 专线与全节点 x1 倍率，提供 40GB 至 1TB 月流量套餐、100GB/300GB 永久不限时流量包及专业定制方案。本文整理 2026 无忧链接月付、季付、半年付、年付、两年付、三年付价格，自研客户端、ChatGPT、Gemini 与 Netflix 等支持情况。"
 h1: "无忧链接怎么样？全 IPLC 套餐、价格与客户端测评"
-heroDescription: "无忧链接采用全 IPLC 专线，全节点 x1 倍率，并提供 40GB 至 1TB 的多档月流量方案、100GB 与 300GB 永久不限时流量包，以及专业级定制套餐。官方同时提供 iOS、Android、Windows、macOS 自研客户端。当前存在 wuyou666 限时8折活动，具体适用资格以结算页面为准。"
+heroDescription: "无忧链接采用全 IPLC 专线，全节点 x1 倍率，并提供 40GB 至 1TB 的多档月流量方案、100GB 与 300GB 永久不限时流量包，以及专业级定制套餐。官方同时提供 iOS、Android、Windows、macOS 自研客户端。优惠码 wuyou666 仅适用于舒心链接、省心链接、随心链接、忘忧链接，享 8 折且仅可使用一次。"
 serviceIntro:
   - "无忧链接官方页面将整体网络描述为全 IPLC 专线，并采用全节点 x1 倍率。常规套餐覆盖 40GB 至 1000GB 月流量，支持月付、季付、半年付、年付、两年付和三年付等不同购买周期。"
   - "除常规月流量套餐外，无忧链接还提供 100GB 与 300GB 永久不限时流量包，以及面向跨境电商、直播、企业应用等场景的专业级定制方案。官方目前提供 Android、iOS、Windows、macOS 自研客户端。"
@@ -44,6 +44,7 @@ pricing:
     traffic: "100GB/月"
     period: "月付"
     originalPrice: "¥19"
+    discountPrice: "¥15.20"
     couponEligible: true
     desc: "轻量日常使用"
 
@@ -51,36 +52,42 @@ pricing:
     traffic: "100GB/月"
     period: "季付"
     originalPrice: "¥51"
+    discountPrice: "¥40.80"
     couponEligible: true
 
   - name: "舒心链接"
     traffic: "100GB/月"
     period: "半年付"
     originalPrice: "¥96"
+    discountPrice: "¥76.80"
     couponEligible: true
 
   - name: "舒心链接"
     traffic: "100GB/月"
     period: "年付"
     originalPrice: "¥182"
+    discountPrice: "¥145.60"
     couponEligible: true
 
   - name: "舒心链接"
     traffic: "100GB/月"
     period: "两年付"
     originalPrice: "¥319"
+    discountPrice: "¥255.20"
     couponEligible: true
 
   - name: "舒心链接"
     traffic: "100GB/月"
     period: "三年付"
     originalPrice: "¥410"
+    discountPrice: "¥328.00"
     couponEligible: true
 
   - name: "省心链接"
     traffic: "200GB/月"
     period: "月付"
     originalPrice: "¥33"
+    discountPrice: "¥26.40"
     couponEligible: true
     desc: "日常视频 / AI"
 
@@ -88,36 +95,42 @@ pricing:
     traffic: "200GB/月"
     period: "季付"
     originalPrice: "¥89"
+    discountPrice: "¥71.20"
     couponEligible: true
 
   - name: "省心链接"
     traffic: "200GB/月"
     period: "半年付"
     originalPrice: "¥168"
+    discountPrice: "¥134.40"
     couponEligible: true
 
   - name: "省心链接"
     traffic: "200GB/月"
     period: "年付"
     originalPrice: "¥316"
+    discountPrice: "¥252.80"
     couponEligible: true
 
   - name: "省心链接"
     traffic: "200GB/月"
     period: "两年付"
     originalPrice: "¥554"
+    discountPrice: "¥443.20"
     couponEligible: true
 
   - name: "省心链接"
     traffic: "200GB/月"
     period: "三年付"
     originalPrice: "¥712"
+    discountPrice: "¥569.60"
     couponEligible: true
 
   - name: "随心链接"
     traffic: "500GB/月"
     period: "月付"
     originalPrice: "¥77"
+    discountPrice: "¥61.60"
     couponEligible: true
     desc: "高频流媒体"
 
@@ -125,36 +138,42 @@ pricing:
     traffic: "500GB/月"
     period: "季付"
     originalPrice: "¥207"
+    discountPrice: "¥165.60"
     couponEligible: true
 
   - name: "随心链接"
     traffic: "500GB/月"
     period: "半年付"
     originalPrice: "¥392"
+    discountPrice: "¥313.60"
     couponEligible: true
 
   - name: "随心链接"
     traffic: "500GB/月"
     period: "年付"
     originalPrice: "¥739"
+    discountPrice: "¥591.20"
     couponEligible: true
 
   - name: "随心链接"
     traffic: "500GB/月"
     period: "两年付"
     originalPrice: "¥1293"
+    discountPrice: "¥1034.40"
     couponEligible: true
 
   - name: "随心链接"
     traffic: "500GB/月"
     period: "三年付"
     originalPrice: "¥1663"
+    discountPrice: "¥1330.40"
     couponEligible: true
 
   - name: "忘忧链接"
     traffic: "1000GB/月"
     period: "月付"
     originalPrice: "¥117"
+    discountPrice: "¥93.60"
     couponEligible: true
     desc: "大流量 / 多设备"
 
@@ -162,44 +181,49 @@ pricing:
     traffic: "1000GB/月"
     period: "季付"
     originalPrice: "¥315"
+    discountPrice: "¥252.00"
     couponEligible: true
 
   - name: "忘忧链接"
     traffic: "1000GB/月"
     period: "半年付"
     originalPrice: "¥596"
+    discountPrice: "¥476.80"
     couponEligible: true
 
   - name: "忘忧链接"
     traffic: "1000GB/月"
     period: "年付"
     originalPrice: "¥1123"
+    discountPrice: "¥898.40"
     couponEligible: true
 
   - name: "忘忧链接"
     traffic: "1000GB/月"
     period: "两年付"
     originalPrice: "¥1965"
+    discountPrice: "¥1572.00"
     couponEligible: true
 
   - name: "忘忧链接"
     traffic: "1000GB/月"
     period: "三年付"
     originalPrice: "¥2527"
+    discountPrice: "¥2021.60"
     couponEligible: true
 
   - name: "100G永久不限时无忧链接"
     traffic: "100GB总量"
     period: "一次性"
     originalPrice: "¥98"
-    couponEligible: true
+    couponEligible: false
     desc: "低频备用"
 
   - name: "300G永久不限时无忧链接"
     traffic: "300GB总量"
     period: "一次性"
     originalPrice: "¥288"
-    couponEligible: true
+    couponEligible: false
     desc: "长期备用"
 
   - name: "无忧专业级定制套餐"
@@ -215,7 +239,13 @@ temporaryCoupons:
     code: "wuyou666"
     discount: "8折"
     discountPercent: "20%"
-    scope: "符合活动资格的订单"
+    scope: "仅限舒心链接、省心链接、随心链接、忘忧链接，仅可使用一次"
+    eligiblePlans:
+      - "舒心链接"
+      - "省心链接"
+      - "随心链接"
+      - "忘忧链接"
+    usageLimit: 1
     startsAt: "2026-09-30T00:00:00+08:00"
     expiresAt: null
     manualActive: true
@@ -223,6 +253,8 @@ temporaryCoupons:
     priority: 100
     excludedPlans:
       - "MINI链接"
+      - "100G永久不限时无忧链接"
+      - "300G永久不限时无忧链接"
       - "无忧专业级定制套餐"
 
 resetPackages:
@@ -386,27 +418,67 @@ visualData:
     discount: 3.80
     coupon: "wuyou666"
     percent: 20
-    note: "当前限时活动码 wuyou666 为8折；官方页面同时将其描述为新人首次优惠/限时发放中，最终资格以结算页为准。"
+    note: "优惠码 wuyou666 仅适用于舒心链接、省心链接、随心链接、忘忧链接，为8折，仅可使用一次；折后价仅供符合条件且尚未使用该优惠码的订单参考，最终资格以结算页为准。"
 ---
 
 ## 全 IPLC / x1 / 不限速
 
 无忧链接官方页面将整体网络描述为全 IPLC 专线，全节点 x1 倍率，不限制速度，不限制客户端数量。
 
+## 无忧链接优惠码与套餐价格
+
+优惠码 **`wuyou666`** 仅适用于**舒心链接、省心链接、随心链接、忘忧链接**，可享 **8 折**，**仅可使用一次**。下列折后价仅供符合条件且尚未使用该优惠码的订单参考，不代表以后续费或再次购买仍可使用。MINI链接、100G 与 300G 永久不限时套餐、专业级定制套餐均不参与优惠，重置流量包也不适用。
+
+### 常规套餐原价表
+
+以下金额均为对应购买周期的一次性付款金额，单位为人民币；流量为每月额度。“—”表示当前资料未提供该选项。
+
+| 套餐 | 每月流量 | 月付 | 季付 | 半年付 | 年付 | 两年付 | 三年付 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| MINI链接 | 40GB/月 | — | — | — | ¥79 | — | — |
+| 舒心链接 | 100GB/月 | ¥19 | ¥51 | ¥96 | ¥182 | ¥319 | ¥410 |
+| 省心链接 | 200GB/月 | ¥33 | ¥89 | ¥168 | ¥316 | ¥554 | ¥712 |
+| 随心链接 | 500GB/月 | ¥77 | ¥207 | ¥392 | ¥739 | ¥1293 | ¥1663 |
+| 忘忧链接 | 1000GB/月 | ¥117 | ¥315 | ¥596 | ¥1123 | ¥1965 | ¥2527 |
+
+### 常规套餐折后价表（8 折，仅限使用一次）
+
+折后价 = 原价 × 0.8，实际适用资格以结算页面为准。
+
+| 套餐 | 每月流量 | 月付 | 季付 | 半年付 | 年付 | 两年付 | 三年付 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| MINI链接 | 40GB/月 | — | — | — | 不适用 | — | — |
+| 舒心链接 | 100GB/月 | ¥15.20 | ¥40.80 | ¥76.80 | ¥145.60 | ¥255.20 | ¥328.00 |
+| 省心链接 | 200GB/月 | ¥26.40 | ¥71.20 | ¥134.40 | ¥252.80 | ¥443.20 | ¥569.60 |
+| 随心链接 | 500GB/月 | ¥61.60 | ¥165.60 | ¥313.60 | ¥591.20 | ¥1034.40 | ¥1330.40 |
+| 忘忧链接 | 1000GB/月 | ¥93.60 | ¥252.00 | ¥476.80 | ¥898.40 | ¥1572.00 | ¥2021.60 |
+
+### 不限时流量包与专业定制价格
+
+| 套餐 | 流量 | 付款周期 | 原价 | 8 折参考价 |
+|---|---|---|---:|---:|
+| 100G永久不限时无忧链接 | 100GB总量 | 一次性 | ¥98 | 不适用 |
+| 300G永久不限时无忧链接 | 300GB总量 | 一次性 | ¥288 | 不适用 |
+| 无忧专业级定制套餐 | 500GB展示额度 / 按需求确认 | 月付 | ¥680 | 不适用 |
+
+不限时套餐为固定总流量，用完后需重新购买或重置。专业定制价格和展示额度为参考，最终方案需向客服确认。
+
 ## 重置流量包
 
 无忧链接各套餐均提供对应的重置流量包，可在当月流量不足时购买重置：
 
-- MINI链接：¥15
-- 舒心链接：¥19
-- 省心链接：¥33
-- 随心链接：¥77
-- 忘忧链接：¥117
-- 100G永久不限时：¥96
-- 300G永久不限时：¥286
-- 专业级定制：¥680
+| 对应套餐 | 重置流量包原价 |
+|---|---:|
+| MINI链接 | ¥15 |
+| 舒心链接 | ¥19 |
+| 省心链接 | ¥33 |
+| 随心链接 | ¥77 |
+| 忘忧链接 | ¥117 |
+| 100G永久不限时无忧链接 | ¥96 |
+| 300G永久不限时无忧链接 | ¥286 |
+| 无忧专业级定制套餐 | ¥680 |
 
-重置流量包属于流量补充功能，不是新的计费周期，也不要自动套用优惠码。
+重置流量包属于流量补充功能，不是新的计费周期，不适用 `wuyou666` 优惠码。
 
 ## CUSTOM NETWORK / 专业级定制
 
@@ -454,9 +526,9 @@ visualData:
 
 ## 无忧链接需要注意什么？
 
-### wuyou666 是限时活动
+### wuyou666 仅可使用一次
 
-当前官方活动提供 `wuyou666` 8折优惠，官方页面同时将其描述为新人首次优惠/限时发放中，最终资格以实际结算页面为准。不是永久优惠码。
+优惠码 `wuyou666` 仅适用于舒心链接、省心链接、随心链接、忘忧链接，可享 8 折，仅可使用一次。使用后，不应再将后续订单或续费按同一优惠码的 8 折价计算；最终适用资格以实际结算页面为准。
 
 ### 官方没有公布明确结束时间
 
@@ -476,7 +548,7 @@ MINI链接 40GB/月，¥79/年，不支持当前优惠码。
 
 ### 重置流量包不是新的套餐周期
 
-也不要自动套用优惠码。
+不适用 `wuyou666` 优惠码。
 
 ### 当前官方暂不支持第三方客户端
 
@@ -494,19 +566,19 @@ MINI链接 40GB/月，¥79/年，不支持当前优惠码。
 
 ### 无忧链接优惠码是什么？
 
-当前限时活动码为 `wuyou666`，8折。官方未公布明确截止时间。
+优惠码为 `wuyou666`，仅适用于舒心链接、省心链接、随心链接、忘忧链接，可享 8 折，仅可使用一次。当前未公布明确截止时间。
 
-### wuyou666 是永久优惠码吗？
+### wuyou666 可以重复使用吗？
 
-不是。当前官方将其描述为限时发放活动。
+不可以，仅可使用一次。折后价只供符合条件且尚未使用该优惠码的订单参考。
 
 ### 哪些套餐不能使用 wuyou666？
 
-已确认 MINI链接 和 无忧专业级定制套餐 不能使用。
+只有舒心链接、省心链接、随心链接、忘忧链接可使用。MINI链接、100G 与 300G 永久不限时套餐、无忧专业级定制套餐及重置流量包均不适用。
 
 ### 永久不限时套餐能使用 wuyou666 吗？
 
-可以。用户已经在当前官方结算页面验证，100G永久不限时 和 300G永久不限时 均可输入该优惠码。
+不可以。100G永久不限时与300G永久不限时均不适用 `wuyou666`，需按原价购买。
 
 ### MINI多少钱？
 

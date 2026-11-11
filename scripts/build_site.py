@@ -1,6 +1,7 @@
 from pathlib import Path
 import html
 import json
+import os
 import re
 import shutil
 import urllib.parse
@@ -12,7 +13,31 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / 'brands'
 OUT = ROOT / 'website' / 'dist'
 
+# 品牌排位：同步自 Colasaiko/Home 的推荐机场排行（2026-11-11 FlyV 登顶版）
+HOME_ORDER = [
+    'feiv', 'weifeng', 'muguang', 'feimao', 'wavenet', 'lingdong',
+    'invisible', 'firefly', 'wuyou', 'sogo', 'weitu', 'shanyue',
+    'dalao', 'lingmao', 'kuajie', 'bitznet', 'baoyun', 'jiuyun',
+    'shenxing', 'xingdaomeng', 'kexin', 'guangsu', 'u1s1', 'jilian',
+    'guangnian', 'yifan', 'edge', 'ermao', 'sujie', 'tizi',
+    'kuaili', 'nanocloud', 'phantom', 'quanqiuyun', 'yuzhouyun',
+]
+FEATURED_COUNT = 12
+
+# 样式表版本号：改动 website/dist/style.css 后调高，避免访客读到旧缓存
+STYLE_VER = '20261111-promo2'
+
+# 线上正式网址（GitHub Pages 从分支根目录部署，站点内容位于 website/dist/）
+SITE_URL = 'https://colasaiko.github.io/jichangbuy/website/dist/'
+SITE_NAME = '机场买买买！'
+DEFAULT_DESC = '2026最新全网稳定机场推荐与高性价比专线排行榜。收录35家主流科学上网机场，提供全专线、便宜月付套餐、独家优惠券与独立购买落地页。'
+
 e = lambda value: html.escape(str(value or ''), quote=True)
+
+def rich(value):
+    """Escape text, then render ~~old price~~ as a struck-through price (used by brand promo copy)."""
+    return re.sub(r'~~(.+?)~~', r'<s class="price-was">\1</s>', e(value))
+
 
 def text(value):
     if isinstance(value, list): return ' · '.join(map(str, value))
@@ -67,52 +92,20 @@ def load():
         
         raw_brands.append(item)
 
-    # 排序逻辑：
-    # 1. 站长主推品牌严格只有 9 个：微风，飞猫，暮光，大佬，firefly，灵猫，闪跃，无忧，跨界
-    # 2. FlyV (feiv) 普通对待，无需特别标识，仅放在前排一点点（第 10 位）
-    # 3. 其余 25 个品牌随机打乱
-    top9_slugs = [
-        'weifeng',   # 1 微风
-        'feimao',    # 2 飞猫
-        'muguang',   # 3 暮光
-        'dalao',     # 4 大佬
-        'firefly',   # 5 firefly
-        'lingmao',   # 6 灵猫
-        'shanyue',   # 7 闪跃
-        'wuyou',     # 8 无忧
-        'kuajie'     # 9 跨界
-    ]
-    
+    # 排序逻辑：与 Colasaiko/Home「推荐机场」页面 (topic/tuijianjichang/brands/) 保持完全一致
+    # 前 FEATURED_COUNT 位为站长主力推荐，其余按 Home 资料库顺序排列；未在列表中的新品牌追加到末尾
     brand_map = {b['slug']: b for b in raw_brands}
-    
-    featured_brands = []
-    for s in top9_slugs:
+    all_sorted = []
+    for s in HOME_ORDER:
         if s in brand_map:
-            b = brand_map[s]
-            b['is_featured'] = True
-            b['featured_rank'] = len(featured_brands) + 1
-            featured_brands.append(b)
-            
-    other_brands = [b for b in raw_brands if b['slug'] not in top9_slugs]
-    feiv_brand = None
-    rest_brands = []
-    for b in other_brands:
+            b = brand_map.pop(s)
+            b['is_featured'] = len(all_sorted) < FEATURED_COUNT
+            b['featured_rank'] = len(all_sorted) + 1 if b['is_featured'] else None
+            all_sorted.append(b)
+    for b in sorted(brand_map.values(), key=lambda x: x['slug']):
         b['is_featured'] = False
-        if b['slug'] == 'feiv':
-            feiv_brand = b
-        else:
-            rest_brands.append(b)
-            
-    # 固定随机种子，保持打乱结果自然且稳定
-    rng = random.Random(2026)
-    rng.shuffle(rest_brands)
-    
-    # 仅把 feiv 放在第 10 位，不赋予特殊推荐地位
-    if feiv_brand:
-        all_sorted = featured_brands + [feiv_brand] + rest_brands
-    else:
-        all_sorted = featured_brands + rest_brands
-        
+        b['featured_rank'] = None
+        all_sorted.append(b)
     return all_sorted
 
 def coupon_info(b):
@@ -121,6 +114,99 @@ def coupon_info(b):
     disc = c.get('discount') or c.get('discountPercent') or ''
     scope = c.get('scope') or ''
     return code, disc, scope
+
+PERIOD_MONTHS = {'月付': 1, '季付': 3, '半年付': 6, '年付': 12, '二年付': 24, '两年付': 24, '三年付': 36}
+
+
+def short_price(value):
+    s = str(value or '').strip()
+    m = re.fullmatch(r'(\D*)(\d+\.\d+)(\D*)', s)
+    if not m:
+        return s
+    num = f'{float(m.group(2)):.2f}'.rstrip('0').rstrip('.')
+    return f'{m.group(1)}{num}{m.group(3)}'
+
+
+def build_plan_cards(b, plans):
+    """Group plans by name + traffic so every billing period of one plan sits in one card."""
+    names = [str(p.get('name') or '') for p in plans]
+    prefix = ''
+    if len(set(names)) > 1:
+        common = os.path.commonprefix(names)
+        cut = max(common.rfind(' - '), common.rfind(' — '))
+        if cut > 0:
+            prefix = common[:cut + 3]
+
+    coupon = b.get('coupon') or {}
+    code = coupon.get('code') or ''
+    eligible_names = set(coupon.get('eligiblePlans') or [])
+
+    groups = {}
+    for p in plans:
+        name = str(p.get('name') or '')
+        key = (name, str(p.get('traffic') or ''))
+        groups.setdefault(key, []).append(p)
+
+    cards = []
+    for (name, traffic), items in groups.items():
+        label = name[len(prefix):] if prefix and name.startswith(prefix) else name
+        flags = [p.get('couponEligible') for p in items]
+        if eligible_names:
+            ok = name in eligible_names
+        elif any(f is True for f in flags):
+            ok = True
+        elif flags and all(f is False for f in flags):
+            ok = False
+        else:
+            ok = None
+        if code and ok:
+            tag = f'<span class="plan-card-tag is-yes">可用 {e(code)}</span>'
+        elif code and ok is False:
+            tag = '<span class="plan-card-tag">不参与优惠</span>'
+        else:
+            tag = ''
+
+        tiles = []
+        for p in items:
+            period = str(p.get('period') or '')
+            orig = short_price(p.get('originalPrice') or p.get('price') or '—')
+            disc = short_price(p.get('discountPrice') or '')
+            shown = disc if disc and disc != orig else orig
+            per_month = ''
+            months = PERIOD_MONTHS.get(period)
+            val = parse_price_num(shown)
+            if months and months > 1 and val:
+                per_month = f'<span class="pp-sub">≈ ¥{val / months:.1f}/月</span>'
+            elif not months and period:
+                per_month = '<span class="pp-sub">用完为止</span>' if any(k in period for k in ('一次', '不限时')) else ''
+            strike = f'<s class="pp-orig">{e(orig)}</s>' if disc and disc != orig else ''
+            tiles.append(f'<li class="plan-price"><span class="pp-period">{e(period)}</span>'
+                         f'<span class="pp-amount">{strike}{e(shown)}</span>{per_month}</li>')
+
+        details = []
+        for p in items:
+            for k in ('validity', 'deviceLimit', 'peakBandwidth', 'note', 'description'):
+                v = str(p.get(k) or '').strip()
+                if v and v not in details:
+                    details.append(v)
+        detail_html = f'<p class="plan-card-note">{e(" · ".join(details))}</p>' if details else ''
+        single = ' is-single' if len(tiles) == 1 else ''
+
+        cards.append(f'''
+            <article class="plan-card{' is-coupon' if ok and code else ''}">
+              <header class="plan-card-head">
+                <div>
+                  <h3 class="plan-card-name">{e(label)}</h3>
+                  {f'<span class="plan-card-traffic"><i class="fa-solid fa-bolt"></i> {e(traffic)}</span>' if traffic else ''}
+                </div>
+                {tag}
+              </header>
+              <ul class="plan-price-list{single}">{''.join(tiles)}</ul>
+              {detail_html}
+              <a class="plan-card-buy" href="{e(b['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer">选购此套餐 ↗</a>
+            </article>''')
+    return ''.join(cards), len(groups)
+
 
 def extract_chart_items(plans):
     if not plans:
@@ -241,7 +327,7 @@ const cards = document.querySelectorAll('.brand-card');
 const counter = document.getElementById('search-counter');
 const noResult = document.getElementById('no-result');
 let currentFilter = 'all';
-const INITIAL_SHOW_COUNT = 9;
+const INITIAL_SHOW_COUNT = 12;
 let isExpanded = false;
 
 function filterCards() {
@@ -280,7 +366,7 @@ function filterCards() {
             expandWrap.style.display = 'flex';
             if (toggleBtn) {
                 if (isExpanded) {
-                    toggleBtn.innerHTML = '<span>收起部分品牌（返回主力推荐 9 家）</span> <i class="fa-solid fa-chevron-up"></i>';
+                    toggleBtn.innerHTML = '<span>收起部分品牌（返回主力推荐 12 家）</span> <i class="fa-solid fa-chevron-up"></i>';
                 } else {
                     const remaining = matchCount - INITIAL_SHOW_COUNT;
                     toggleBtn.innerHTML = '<span>展开查看更多品牌（还有 ' + remaining + ' 家入库机场）</span> <i class="fa-solid fa-chevron-down"></i>';
@@ -365,27 +451,40 @@ filterCards();
 </script>
 """
 
-def shell(title, content, floating, prefix='', is_detail=False):
+def shell(title, content, floating, prefix='', is_detail=False, path='', desc=DEFAULT_DESC, jsonld=None):
+    url = SITE_URL + path
+    full_title = f'{title} · {SITE_NAME}'
+    ld = ''.join(f'\n  <script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in (jsonld or []))
     return f'''<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{e(title)} · 机场买买买！</title>
-  <meta name="description" content="2026最新全网稳定机场推荐与高性价比专线排行榜。收录35家主流科学上网机场，提供全专线、便宜月付套餐、独家优惠券与独立购买落地页。">
+  <title>{e(full_title)}</title>
+  <meta name="description" content="{e(desc)}">
   <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{e(url)}">
+  <meta property="og:type" content="{'product' if is_detail else 'website'}">
+  <meta property="og:site_name" content="{SITE_NAME}">
+  <meta property="og:title" content="{e(full_title)}">
+  <meta property="og:description" content="{e(desc)}">
+  <meta property="og:url" content="{e(url)}">
+  <meta property="og:locale" content="zh_CN">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{e(full_title)}">
+  <meta name="twitter:description" content="{e(desc)}">{ld}
   <link rel="icon" href="{FAVICON_DATA_URI}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Marcellus&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{prefix}style.css">
+  <link rel="stylesheet" href="{prefix}style.css?v={STYLE_VER}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <div class="site-bg"></div>
   <header class="site-header">
     <div class="header-inner">
-      <a class="wordmark" href="{prefix}index.html">
+      <a class="wordmark" href="{prefix or './'}">
         <span class="mark platinum-mark">买</span>
         <span class="brand-text">
           <strong class="wordmark-title">机场买买买！</strong>
@@ -399,7 +498,7 @@ def shell(title, content, floating, prefix='', is_detail=False):
         <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/brands/index.html" target="_blank" rel="noopener" class="nav-brands-link" title="全部机场品牌与套餐价格 | 品牌资料库">
           全部品牌资料库 ↗
         </a>
-        <a href="{prefix}index.html#collection" class="nav-count">
+        <a href="{prefix or './'}#collection" class="nav-count">
           全部品牌 <span class="badge">35</span>
         </a>
       </nav>
@@ -409,7 +508,7 @@ def shell(title, content, floating, prefix='', is_detail=False):
   <footer class="site-footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <a class="wordmark" href="{prefix}index.html">
+        <a class="wordmark" href="{prefix or './'}">
           <span class="mark platinum-mark">买</span>
           <span class="brand-text">
             <strong class="wordmark-title">机场买买买！选购中心</strong>
@@ -420,7 +519,7 @@ def shell(title, content, floating, prefix='', is_detail=False):
       </div>
       <div class="footer-meta">
         <div class="footer-links">
-          <a href="{prefix}index.html">返回首页</a>
+          <a href="{prefix or './'}">返回首页</a>
           <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/index.html" target="_blank" rel="noopener">推荐机场主推榜 ↗</a>
           <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/brands/index.html" target="_blank" rel="noopener">全部品牌资料库 ↗</a>
           <a href="https://github.com/Colasaiko/Home" target="_blank" rel="noopener">开源仓库 ↗</a>
@@ -445,7 +544,7 @@ def build_brand_subtitles(b):
     
     # 1. 梯队与定位
     if is_feat:
-        tier = "站长主力推荐 9 大旗舰品牌之一"
+        tier = f"站长主力推荐 {FEATURED_COUNT} 大旗舰品牌之一"
         card_tier = "主力推荐旗舰"
     elif slug == 'feiv':
         tier = "精选高速专线品牌"
@@ -509,20 +608,29 @@ def build_brand_subtitles(b):
     else:
         unlock_phrase = "原生 IP 节点全面适配全球主流网站访问与极清流媒体"
         
-    deep_subtitle = f"{tier}。基于【{lt_str}】网络架构{proto_phrase}{spd_phrase}{dev_phrase}。全站深度收录其 {plans_cnt} 款多周期购买方案{price_str}{extra_pkg}，{unlock_phrase}，网络通信零丢包、低延迟。"
-    
+    promo = b.get('promo') or {}
+    if promo.get('pitch'):
+        # 品牌自定义的价格卖点放在最前面，替代默认的“最低月付起步”括号说明
+        deep_subtitle = f"{tier}。{promo['pitch']}基于【{lt_str}】网络架构{proto_phrase}{spd_phrase}{dev_phrase}，全站收录其 {plans_cnt} 款多周期购买方案{extra_pkg}。"
+    else:
+        deep_subtitle = f"{tier}。基于【{lt_str}】网络架构{proto_phrase}{spd_phrase}{dev_phrase}。全站深度收录其 {plans_cnt} 款多周期购买方案{price_str}{extra_pkg}，{unlock_phrase}，网络通信零丢包、低延迟。"
+
     # 卡片简要副标题（2行以内，极度凝练有信息量）
-    card_subtitle = f"{card_tier} · {lt_str} · 收录 {plans_cnt} 款方案"
-    if min_m:
-        card_subtitle += f" · ¥{min_m:.2f}".rstrip('0').rstrip('.') + "起"
-    if min_o:
-        card_subtitle += " · 不限时包"
-        
+    if promo.get('priceLine'):
+        card_subtitle = f"{card_tier} · {promo['priceLine']}"
+    else:
+        card_subtitle = f"{card_tier} · {lt_str} · 收录 {plans_cnt} 款方案"
+        if min_m:
+            card_subtitle += f" · ¥{min_m:.2f}".rstrip('0').rstrip('.') + "起"
+        if min_o:
+            card_subtitle += " · 不限时包"
+
     return deep_subtitle, card_subtitle
 
 def build():
     OUT.mkdir(parents=True, exist_ok=True)
     brands = load()
+    page_urls = ['']
     total_brands = len(brands)
     
     cards = []
@@ -557,7 +665,9 @@ def build():
         
         month_txt = f"¥{b['min_month']:.2f}".rstrip('0').rstrip('.') + " /月起" if b.get('min_month') else "—"
         year_txt = f"¥{b['min_year']:.2f}".rstrip('0').rstrip('.') + " /年起" if b.get('min_year') else "—"
-        
+        promo_box = [(str(x.get('label', '')), str(x.get('value', ''))) for x in ((b.get('promo') or {}).get('priceBox') or [])][:2]
+        box = promo_box if len(promo_box) == 2 else [('月付起步', month_txt), ('年付优惠', year_txt)]
+
         coupon_badge_html = f'''<div class="card-coupon-badge" title="优惠码：{e(code)} {e(disc)}"><span class="coupon-tag-label">优惠码</span> <span class="coupon-code-val">{e(code)}</span> <strong>{e(disc)}</strong></div>''' if code else '<div class="card-coupon-badge no-coupon"><span class="coupon-tag-label">正价</span> 官方正价保障</div>'
         
         line_badge = text(b.get('lineType', [])) or '优质线路'
@@ -582,8 +692,8 @@ def build():
           </div>
           
           <div class="card-title-wrap">
-            <h3 class="card-name"><a href="brands/{slug}/index.html">{e(b['name'])}</a></h3>
-            <p class="card-subtitle">{e(card_subtitle)}</p>
+            <h3 class="card-name"><a href="brands/{slug}/">{e(b['name'])}</a></h3>
+            <p class="card-subtitle">{rich(card_subtitle)}</p>
           </div>
           
           <div class="card-coupon-row">
@@ -594,15 +704,15 @@ def build():
             {features_html}
           </ul>
           
-          <div class="card-pricing-box">
+          <div class="card-pricing-box{' is-promo' if promo_box else ''}">
             <div class="price-item">
-              <span class="price-label">月付起步</span>
-              <strong class="price-val">{month_txt}</strong>
+              <span class="price-label">{e(box[0][0])}</span>
+              <strong class="price-val">{rich(box[0][1])}</strong>
             </div>
             <div class="price-divider"></div>
             <div class="price-item">
-              <span class="price-label">年付优惠</span>
-              <strong class="price-val">{year_txt}</strong>
+              <span class="price-label">{e(box[1][0])}</span>
+              <strong class="price-val">{rich(box[1][1])}</strong>
             </div>
           </div>
           
@@ -610,7 +720,7 @@ def build():
             <a class="btn-action btn-direct" href="{e(b['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer">
               直达官网 ↗
             </a>
-            <a class="btn-action btn-detail" href="brands/{slug}/index.html">
+            <a class="btn-action btn-detail" href="brands/{slug}/">
               查看资料 ↗
             </a>
           </div>
@@ -618,89 +728,9 @@ def build():
         ''')
         
         # Build detail page
-        rows = []
-        for p in plans:
-            eligible = p.get('couponEligible')
-            detail = ' · '.join(str(p[k]) for k in ('validity','deviceLimit','peakBandwidth','note','description') if p.get(k))
-            orig = p.get('originalPrice') or p.get('price') or '—'
-            disc_price = p.get('discountPrice') or '—'
-            
-            orig_html = f'<span class="price-original">{e(orig)}</span>' if disc_price != '—' and disc_price != orig else f'<strong>{e(orig)}</strong>'
-            disc_html = f'<strong class="price-discounted">{e(disc_price)}</strong>' if disc_price != '—' else '<span class="text-muted">—</span>'
-            
-            status_badge = '<span class="badge-status badge-yes">适用</span>' if eligible is True else '<span class="badge-status badge-no">不适用</span>' if eligible is False else '<span class="badge-status badge-na">—</span>'
-            
-            rows.append(f'''
-            <tr>
-              <td data-label="套餐名称">
-                <div class="plan-name-cell">
-                  <strong>{e(p.get('name'))}</strong>
-                  {f'<small>{e(detail)}</small>' if detail else ''}
-                </div>
-              </td>
-              <td data-label="流量配额"><span class="plan-traffic">{e(p.get('traffic'))}</span></td>
-              <td data-label="计费周期"><span class="plan-period">{e(p.get('period'))}</span></td>
-              <td data-label="官方原价">{orig_html}</td>
-              <td data-label="折后优惠价">{disc_html}</td>
-              <td data-label="优惠码支持">{status_badge}</td>
-              <td data-label="快捷选购">
-                <a class="btn-buy-row" href="{e(b['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer">选购 ↗</a>
-              </td>
-            </tr>
-            ''')
-            
-        # Build compact visual price chart (直观阶梯图表 · 拒绝横向滑动)
-        chart_items = extract_chart_items(plans)
-        max_traffic = max((x.get('traffic_val', 0) for x in chart_items), default=1) or 1
-        
-        chart_rows_html = []
-        for ci in chart_items:
-            t_val = ci.get('traffic_val', 0)
-            if t_val > 0:
-                bar_pct = max(20, min(100, int((t_val / max_traffic) * 100)))
-            else:
-                bar_pct = 50
-                
-            orig_p = ci.get('orig_price', '')
-            disc_p = ci.get('disc_price', '')
-            
-            orig_span = f'<span class="chart-orig">{e(orig_p)}</span>' if disc_p and disc_p != orig_p else ''
-            disc_span = f'<strong class="chart-disc">{e(disc_p or orig_p)}</strong>'
-            
-            chart_rows_html.append(f'''
-            <div class="chart-row">
-              <div class="chart-info">
-                <span class="chart-name">{e(ci['name'])}</span>
-                <div class="chart-badges">
-                  <span class="chart-traffic-pill"><i class="fa-solid fa-bolt"></i> {e(ci['traffic_str'])}</span>
-                  <span class="chart-period-pill">{e(ci['period'])}</span>
-                </div>
-              </div>
-              <div class="chart-bar-wrap">
-                <div class="chart-bar-track">
-                  <div class="chart-bar-fill" style="width: {bar_pct}%;"></div>
-                </div>
-              </div>
-              <div class="chart-pricing">
-                {orig_span}
-                {disc_span}
-              </div>
-              <a class="btn-chart-buy" href="{e(b['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer">选购 ↗</a>
-            </div>
-            ''')
-            
-        chart_section_html = f'''
-        <section class="pricing-chart-section">
-          <div class="section-heading">
-            <h2><i class="fa-solid fa-chart-column"></i> 套餐阶梯价格直观图表</h2>
-            <span class="heading-tag">直观对比 · 拒绝滑动</span>
-          </div>
-          <div class="pricing-chart-box">
-            {''.join(chart_rows_html)}
-          </div>
-        </section>
-        ''' if chart_rows_html else ''
-            
+        plan_cards_html, plan_group_count = build_plan_cards(b, plans)
+        chart_section_html = ''
+
         facts = ''.join(f'''
         <div class="fact-card">
           <dt><i class="fa-solid fa-circle-dot"></i> {label}</dt>
@@ -805,7 +835,7 @@ def build():
         detail_content = f'''
         <main class="detail-container">
           <div class="detail-top-action-bar">
-            <a class="btn-top-big-back floating-back-icon-btn" href="../../index.html#brand-{slug}" onclick="if(window.history.length>1){{window.history.back();return false;}}" title="返回原本位置" aria-label="返回原本位置">
+            <a class="btn-top-big-back floating-back-icon-btn" href="../../#brand-{slug}" onclick="if(window.history.length>1){{window.history.back();return false;}}" title="返回原本位置" aria-label="返回原本位置">
               <span class="floating-icon-arrow"><i class="fa-solid fa-arrow-left"></i></span>
               <span class="floating-icon-text">返回原本位置</span>
             </a>
@@ -816,7 +846,7 @@ def build():
             <span class="sep">/</span>
             <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/brands/{slug}/index.html" target="_blank" rel="noopener" title="{e(b['name'])}套餐价格与资料 | 机场品牌库">{e(b['name'])} 资料库</a>
             <span class="sep">/</span>
-            <a href="../../index.html" title="机场买买买！">机场买买买！</a>
+            <a href="../../" title="机场买买买！">机场买买买！</a>
             <span class="sep">/</span>
             <span class="current">{e(b['name'])} 专属购买页</span>
           </nav>
@@ -825,7 +855,7 @@ def build():
             <div class="detail-hero-main">
               <div class="eyebrow-pill">官方正品注册通道 · 独立落地页</div>
               <h1 class="detail-title">{e(b['name'])}</h1>
-              <p class="detail-intro">{e(deep_subtitle)}</p>
+              <p class="detail-intro">{rich(deep_subtitle)}</p>
               
               <!-- 专属优惠码放在副标题紧随下方 -->
               {hero_coupon_html}
@@ -885,27 +915,12 @@ def build():
           
           <section id="plans-table" class="plans-section">
             <div class="section-heading">
-              <h2><i class="fa-solid fa-layer-group"></i> 全量套餐方案与多周期价格明细</h2>
-              <span class="heading-tag">共 {len(plans)} 款购买方案</span>
+              <h2><i class="fa-solid fa-layer-group"></i> 套餐与价格</h2>
+              <span class="heading-tag">{plan_group_count} 个套餐 · {len(plans)} 种付款方式</span>
             </div>
-            <p class="section-tip"><i class="fa-solid fa-lightbulb"></i> 提示：原价与折后价以官网结算为准。点击右侧“选购”按钮即可直接前往对应结算页。</p>
-            <div class="table-responsive">
-              <table class="plans-table">
-                <thead>
-                  <tr>
-                    <th>套餐名称</th>
-                    <th>流量配额</th>
-                    <th>计费周期</th>
-                    <th>官方原价</th>
-                    <th>折后优惠价</th>
-                    <th>优惠码支持</th>
-                    <th>快捷选购</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {''.join(rows)}
-                </tbody>
-              </table>
+            <p class="section-tip"><i class="fa-solid fa-lightbulb"></i> 同一套餐的各付款周期放在同一张卡片里，长周期附每月均价方便比较；价格以官网结算页为准。</p>
+            <div class="plan-cards">
+              {plan_cards_html}
             </div>
           </section>
           
@@ -919,7 +934,7 @@ def build():
           </section>
           
           <div class="detail-bottom-nav">
-            <a class="btn-back" href="../../index.html#collection">
+            <a class="btn-back" href="../../#collection">
               <i class="fa-solid fa-arrow-left"></i> 返回机场买买买！品牌中心
             </a>
             <a class="btn-download-md" href="{slug}.md" download>
@@ -943,7 +958,24 @@ def build():
         </aside>
         '''
         
-        (target / 'index.html').write_text(shell(f"{b['name']}套餐购买与优惠码", detail_content, detail_floating, '../../', is_detail=True), encoding='utf-8')
+        code_d, disc_d, _ = coupon_info(b)
+        desc_bits = [f"{b['name']}官网购买入口与{len(b.get('pricing', []))}款套餐价格"]
+        if b.get('min_month'): desc_bits.append(f"月付¥{b['min_month']:g}起")
+        if b.get('min_year'): desc_bits.append(f"年付¥{b['min_year']:g}起")
+        if code_d: desc_bits.append(f"优惠码{code_d}（{disc_d}）")
+        lt_d = text(b.get('lineType', []))
+        if lt_d: desc_bits.append(f"线路：{lt_d}")
+        desc_bits.append('含协议、设备与流媒体解锁参数')
+        brand_desc = '，'.join(desc_bits) + '。'
+        brand_path = f'brands/{slug}/'
+        brand_ld = [{
+            '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+            'itemListElement': [
+                {'@type': 'ListItem', 'position': 1, 'name': SITE_NAME, 'item': SITE_URL},
+                {'@type': 'ListItem', 'position': 2, 'name': b['name'], 'item': SITE_URL + brand_path},
+            ]}]
+        page_urls.append(brand_path)
+        (target / 'index.html').write_text(shell(f"{b['name']}套餐购买与优惠码", detail_content, detail_floating, '../../', is_detail=True, path=brand_path, desc=brand_desc, jsonld=brand_ld), encoding='utf-8')
     
     # Build 4-item asymmetric editorial strip for top 4 flagship maisons (weifeng, feimao, muguang, dalao)
     top4 = brands[:4]
@@ -954,6 +986,9 @@ def build():
         m_price = f"¥{b_item['min_month']:.2f}".rstrip('0').rstrip('.') + " /月起" if b_item.get('min_month') else "按量计费"
         y_price = f"¥{b_item['min_year']:.2f}".rstrip('0').rstrip('.') + " /年起" if b_item.get('min_year') else ""
         price_line = f"{m_price} · {y_price}" if y_price else m_price
+        b_promo = b_item.get('promo') or {}
+        price_line = b_promo.get('priceLine') or price_line
+        b_desc = b_promo.get('pitch') or text(b_item.get('features', [])[:2])
         b_line = text(b_item.get('lineType', [])) or '专线线路'
         
         editorial_items_html.append(f'''
@@ -963,11 +998,11 @@ def build():
             <span class="editorial-monogram">{e(b_name[0])}</span>
           </div>
           <div class="editorial-body">
-            <h3 class="editorial-name"><a href="brands/{b_slug}/index.html">{e(b_name)}</a></h3>
-            <p class="editorial-desc">{e(text(b_item.get('features', [])[:2]))}</p>
-            <div class="editorial-price">{price_line}</div>
+            <h3 class="editorial-name"><a href="brands/{b_slug}/">{e(b_name)}</a></h3>
+            <p class="editorial-desc">{rich(b_desc)}</p>
+            <div class="editorial-price{' is-promo' if b_promo.get('priceLine') else ''}">{rich(price_line)}</div>
             <div class="editorial-actions">
-              <a href="brands/{b_slug}/index.html" class="editorial-link">查看详情 →</a>
+              <a href="brands/{b_slug}/" class="editorial-link">查看详情 →</a>
               <a href="{e(b_item['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer" class="editorial-aff">直达选购 ↗</a>
             </div>
           </div>
@@ -1036,7 +1071,7 @@ def build():
           <div class="stat-badge">实测收录</div>
           <div class="stat-number">35<span class="stat-unit">家机场</span></div>
           <p class="stat-desc">
-            精选 9 家主力推荐旗舰品牌，全量收录 26 家精品机场，价格透明，参数真实核验。
+            精选 12 家主力推荐旗舰品牌，全量收录 35 家精品机场，价格透明，参数真实核验。
           </p>
           <div class="stat-pills">
             <span>高速专线</span>
@@ -1219,7 +1254,7 @@ def build():
             
             <div class="filter-tabs" id="filter-tabs">
               <button type="button" class="tab-btn active" data-filter="all">全部品牌 (35)</button>
-              <button type="button" class="tab-btn" data-filter="featured">站长主力推荐 (9家)</button>
+              <button type="button" class="tab-btn" data-filter="featured">站长主力推荐 (12家)</button>
               <button type="button" class="tab-btn" data-filter="iplc">全专线架构</button>
               <button type="button" class="tab-btn" data-filter="iepl">专线线路</button>
               <button type="button" class="tab-btn" data-filter="bgp">中转线路</button>
@@ -1257,12 +1292,30 @@ def build():
     </a>
     '''
     
-    (OUT / 'index.html').write_text(shell('2026 稳定机场推荐 · 专线机场排行榜', index_content, index_floating), encoding='utf-8')
+    index_ld = [
+        {'@context': 'https://schema.org', '@type': 'WebSite', 'name': SITE_NAME, 'url': SITE_URL,
+         'description': DEFAULT_DESC, 'inLanguage': 'zh-CN',
+         'isPartOf': {'@type': 'WebSite', 'name': 'Cola的全栈导航', 'url': 'https://colasaiko.github.io/Home/'}},
+        {'@context': 'https://schema.org', '@type': 'ItemList', 'name': '2026 稳定机场推荐排行榜',
+         'itemListOrder': 'https://schema.org/ItemListOrderAscending', 'numberOfItems': len(brands),
+         'itemListElement': [{'@type': 'ListItem', 'position': i, 'name': x['name'], 'url': f"{SITE_URL}brands/{x['slug']}/"}
+                             for i, x in enumerate(brands, 1)]},
+    ]
+    (OUT / 'index.html').write_text(shell('2026 稳定机场推荐 · 专线机场排行榜', index_content, index_floating, desc=DEFAULT_DESC, jsonld=index_ld), encoding='utf-8')
+
+    from datetime import date
+    today = date.today().isoformat()
+    sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for u in page_urls:
+        sm.append(f'  <url><loc>{SITE_URL}{u}</loc><lastmod>{today}</lastmod><priority>{"1.0" if not u else "0.8"}</priority></url>')
+    sm.append('</urlset>')
+    (OUT / 'sitemap.xml').write_text(chr(10).join(sm) + chr(10), encoding='utf-8')
+    (OUT / 'robots.txt').write_text(f'User-agent: *{chr(10)}Allow: /{chr(10)}{chr(10)}Sitemap: {SITE_URL}sitemap.xml{chr(10)}', encoding='utf-8')
     
     # Generate Enhanced BRAND-INDEX.md with Full Purchase Data
     index_md = f'''# 🛒 机场买买买！2026 全网主流机场品牌购买全景指南与价格目录
 
-> **项目说明**：本文件专为 **[Colasaiko/Home](https://github.com/Colasaiko/Home)** 仓库打造。全网收录 **{total_brands}** 个主流翻墙机场品牌，前 9 名为主推核心品牌，各品牌独立落地页分开放置，提供月付/年付价格、独家优惠券与安全防漏指引。
+> **项目说明**：本文件专为 **[Colasaiko/Home](https://github.com/Colasaiko/Home)** 仓库打造。全网收录 **{total_brands}** 个主流翻墙机场品牌，前 12 名为主推核心品牌，各品牌独立落地页分开放置，提供月付/年付价格、独家优惠券与安全防漏指引。
 
 ---
 
@@ -1281,7 +1334,7 @@ def build():
         y_price = f"¥{b['min_year']:.2f}".rstrip('0').rstrip('.') if b.get('min_year') else "—"
         onetime = "✅ 支持" if b.get('min_onetime') else "—"
         
-        tier = "👑 站长主力" if (b.get('featured_rank') and b['featured_rank'] <= 9) else "标准收录"
+        tier = "👑 站长主力" if (b.get('featured_rank') and b['featured_rank'] <= FEATURED_COUNT) else "标准收录"
         
         code, disc, _ = coupon_info(b)
         coupon_str = f"`{code}` ({disc})" if code else "官方正价"
@@ -1291,21 +1344,22 @@ def build():
         
         index_md += f"| {idx:02d} | **{name}** | {tier} | {line_t} | {proto} | {m_price} | {y_price} | {onetime} | {coupon_str} | {detail_link} | {aff_link} |\n"
         
+    top_lines = []
+    for b in [x for x in brands if x.get('is_featured')]:
+        code, disc, _ = coupon_info(b)
+        line_t = text(b.get('lineType', [])) or '优质线路'
+        coupon_part = f"，优惠码 `{code}`（{disc}）" if code else ""
+        m = f"，月付 ¥{b['min_month']:g} 起" if b.get('min_month') else ""
+        y = f"，年付 ¥{b['min_year']:g} 起" if b.get('min_year') else ""
+        top_lines.append(f"{b['featured_rank']}. **{b['name']}**：{line_t}{coupon_part}{m}{y}。")
+    top_names = '、'.join(x['name'] for x in brands if x.get('is_featured'))
+    top_list_md = chr(10).join(top_lines)
     index_md += f'''
 ---
 
-## 🎯 站长核心主推 9 大品牌推荐榜（微风、飞猫、暮光、大佬、FireFly、灵猫、闪跃、无忧、跨界）
+## 🎯 站长核心主推 {FEATURED_COUNT} 大品牌推荐榜（{top_names}）
 
-1. **微风网络**：全场 IPLC 专线，不限速不限设备，独家 7 折优惠码 `weifeng90`，年付低至 ¥95.90。
-2. **飞猫云**：全 IPLC 专线，标称 2.5Gbps，8 折优惠码 `flycat888`，年付低至 ¥84。
-3. **暮光加速**：BGP 多线智能调度专线级出口，Shadowsocks 协议，8 折优惠码 `mm88`。
-4. **大佬云**：IPLC 专线，提供不限时一次性流量包，首次月付 7 折优惠码 `dly888`。
-5. **FireFly 萤火虫**：IPLC 专线 + VLESS 协议，不限速，8 折优惠码 `firefly`。
-6. **灵猫**：全 IPLC 专线，原生 IP 解锁流媒体与 AI，8 折优惠码 `lingmao`。
-7. **闪跃**：全 IPLC 原生 IP 节点，全节点 x1 倍率，8 折优惠码 `shanyue`。
-8. **无忧链接**：全 IPLC 专线，自研四平台客户端，年付低至 ¥79 起。
-9. **跨界云**：IPLC 高端线路，不限速，全节点 x1 倍率，8 折优惠码 `kuajie`。
-- **FlyV**：多链路 BGP 调度及专线架构，8 折优惠码 `fly20`，月付 ¥25 起（前排收录）。
+{top_list_md}
 
 
 ---
