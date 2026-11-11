@@ -463,6 +463,7 @@ def shell(title, content, floating, prefix='', is_detail=False, path='', desc=DE
   <title>{e(full_title)}</title>
   <meta name="description" content="{e(desc)}">
   <meta name="robots" content="index, follow">
+  <meta name="msvalidate.01" content="0033F8E0046B2CEC42304E48CD039F65" />
   <link rel="canonical" href="{e(url)}">
   <meta property="og:type" content="{'product' if is_detail else 'website'}">
   <meta property="og:site_name" content="{SITE_NAME}">
