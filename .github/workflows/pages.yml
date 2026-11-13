@@ -25,10 +25,13 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      # 发布整个仓库根目录，与分支部署的网址结构一致：
+      # 站点内容在 /website/dist/，验证文件与 IndexNow key 在根目录。
+      # 只发布 website/dist 会让所有 /website/dist/... 网址变成 404。
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'website/dist'
+          path: '.'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
