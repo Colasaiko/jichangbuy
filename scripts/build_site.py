@@ -25,12 +25,13 @@ HOME_ORDER = [
 FEATURED_COUNT = 12
 
 # 样式表版本号：改动 website/dist/style.css 后调高，避免访客读到旧缓存
-STYLE_VER = '20261111-promo2'
+STYLE_VER = '20261113-rank-faq'
 
 # 线上正式网址（GitHub Pages 从分支根目录部署，站点内容位于 website/dist/）
 SITE_URL = 'https://colasaiko.github.io/jichangbuy/website/dist/'
 SITE_NAME = '机场买买买！'
-DEFAULT_DESC = '2026最新全网稳定机场推荐与高性价比专线排行榜。收录35家主流科学上网机场，提供全专线、便宜月付套餐、独家优惠券与独立购买落地页。'
+DEFAULT_DESC = '稳定机场推荐排行榜：收录 35 家主流机场，按线路（IPLC / IEPL 专线、BGP 中转）、月付与年付价格、设备限制和专属优惠码整理，附选购指南与常见问题。'
+INDEX_TITLE = '稳定机场推荐排行榜 · 专线机场选购指南'
 
 e = lambda value: html.escape(str(value or ''), quote=True)
 
@@ -114,6 +115,69 @@ def coupon_info(b):
     disc = c.get('discount') or c.get('discountPercent') or ''
     scope = c.get('scope') or ''
     return code, disc, scope
+
+def build_story_sections(b):
+    """Optional visual sections from front matter: highlights, nodeRegions, buySteps."""
+    hl = b.get('highlights') or []
+    highlights_html = ''
+    if hl:
+        cards = ''.join(f'''
+              <div class="highlight-card">
+                <i class="fa-solid {e(h.get('icon') or 'fa-star')}"></i>
+                <h3>{e(h.get('title'))}</h3>
+                <p>{rich(h.get('text'))}</p>
+              </div>''' for h in hl)
+        highlights_html = f'''
+          <section class="highlights-section">
+            <div class="section-heading">
+              <h2><i class="fa-solid fa-gem"></i> 为什么选 {e(b['name'])}</h2>
+              <span class="heading-tag">核心卖点</span>
+            </div>
+            <div class="highlight-grid">{cards}
+            </div>
+          </section>'''
+
+    regions = b.get('nodeRegions') or []
+    nodes_html = ''
+    if regions:
+        total = sum(int(r.get('count') or 0) for r in regions)
+        top = max(int(r.get('count') or 0) for r in regions) or 1
+        rows = ''.join(f'''
+              <li class="node-row">
+                <span class="node-region">{e(r.get('region'))}</span>
+                <span class="node-line">{e(r.get('line'))}</span>
+                <span class="node-bar"><span style="width: {max(12, round(int(r.get('count') or 0) / top * 100))}%;"></span></span>
+                <span class="node-count">{e(r.get('count'))} 个</span>
+              </li>''' for r in regions)
+        note = b.get('nodeNote') or ''
+        nodes_html = f'''
+          <section class="nodes-section">
+            <div class="section-heading">
+              <h2><i class="fa-solid fa-earth-asia"></i> 节点分布</h2>
+              <span class="heading-tag">{len(regions)} 个地区 · {total} 个节点</span>
+            </div>
+            <ul class="node-list">{rows}
+            </ul>
+            {f'<p class="section-tip"><i class="fa-solid fa-circle-info"></i> {rich(note)}</p>' if note else ''}
+          </section>'''
+
+    steps = b.get('buySteps') or []
+    steps_html = ''
+    if steps:
+        items = ''.join(f'<li><span class="step-no">{i:02d}</span><p>{rich(s)}</p></li>' for i, s in enumerate(steps, 1))
+        steps_html = f'''
+          <section class="steps-section">
+            <div class="section-heading">
+              <h2><i class="fa-solid fa-route"></i> 购买与上手流程</h2>
+              <span class="heading-tag">{len(steps)} 步完成</span>
+            </div>
+            <ol class="step-list">{items}</ol>
+            <div class="steps-cta">
+              <a href="{e(b['aff'])}" target="_blank" rel="nofollow sponsored noopener noreferrer">前往官网注册购买 ↗</a>
+            </div>
+          </section>'''
+    return highlights_html, nodes_html, steps_html
+
 
 PERIOD_MONTHS = {'月付': 1, '季付': 3, '半年付': 6, '年付': 12, '二年付': 24, '两年付': 24, '三年付': 36}
 
@@ -493,7 +557,7 @@ def shell(title, content, floating, prefix='', is_detail=False, path='', desc=DE
         </span>
       </a>
       <nav class="header-nav">
-        <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/index.html" target="_blank" rel="noopener" class="nav-home-link" title="推荐机场主推榜：2026年最新全网高性价比优质稳定节点排行榜">
+        <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/index.html" target="_blank" rel="noopener" class="nav-home-link" title="推荐机场主推榜：高性价比稳定节点排行榜">
           推荐机场主推榜 ↗
         </a>
         <a href="https://colasaiko.github.io/Home/topic/tuijianjichang/brands/index.html" target="_blank" rel="noopener" class="nav-brands-link" title="全部机场品牌与套餐价格 | 品牌资料库">
@@ -612,7 +676,10 @@ def build_brand_subtitles(b):
     promo = b.get('promo') or {}
     if promo.get('pitch'):
         # 品牌自定义的价格卖点放在最前面，替代默认的“最低月付起步”括号说明
-        deep_subtitle = f"{tier}。{promo['pitch']}基于【{lt_str}】网络架构{proto_phrase}{spd_phrase}{dev_phrase}，全站收录其 {plans_cnt} 款多周期购买方案{extra_pkg}。"
+        if promo.get('sub'):
+            deep_subtitle = f"{promo['pitch']}{promo['sub']}"
+        else:
+            deep_subtitle = f"{tier}。{promo['pitch']}基于【{lt_str}】网络架构{proto_phrase}{spd_phrase}{dev_phrase}，全站收录其 {plans_cnt} 款多周期购买方案{extra_pkg}。"
     else:
         deep_subtitle = f"{tier}。基于【{lt_str}】网络架构{proto_phrase}{spd_phrase}{dev_phrase}。全站深度收录其 {plans_cnt} 款多周期购买方案{price_str}{extra_pkg}，{unlock_phrase}，网络通信零丢包、低延迟。"
 
@@ -730,6 +797,7 @@ def build():
         
         # Build detail page
         plan_cards_html, plan_group_count = build_plan_cards(b, plans)
+        highlights_html, nodes_html, steps_html = build_story_sections(b)
         chart_section_html = ''
 
         facts = ''.join(f'''
@@ -890,6 +958,8 @@ def build():
             </div>
           </section>
           
+          {highlights_html}
+
           <section class="specs-section">
             <div class="section-heading">
               <h2><i class="fa-solid fa-sliders"></i> 核心服务规格与网络参数</h2>
@@ -899,7 +969,9 @@ def build():
               {facts}
             </dl>
           </section>
-          
+
+          {nodes_html}
+
           {f'''
           <section class="coupon-section">
             <div class="section-heading">
@@ -924,7 +996,9 @@ def build():
               {plan_cards_html}
             </div>
           </section>
-          
+
+          {steps_html}
+
           <section class="article-section">
             <div class="section-heading">
               <h2><i class="fa-solid fa-file-lines"></i> {e(b['name'])} 深度评测与服务介绍</h2>
@@ -1039,6 +1113,80 @@ def build():
     </section>
     '''
     
+    # Coupon range from data (e.g. 7 折 ~ 9 折)
+    def _disc_val(t):
+        m = re.search(r'(\d+(?:\.\d+)?)\s*折', str(t or ''))
+        if not m:
+            return None
+        v = float(m.group(1))
+        return v / 10 if v >= 10 else v
+    _vals = sorted({v for v in (_disc_val((x.get('coupon') or {}).get('discount')) for x in brands) if v})
+    coupon_range = f"{_vals[0]:g} 折 ~ {_vals[-1]:g} 折" if len(_vals) > 1 else (f"{_vals[0]:g} 折" if _vals else "以各品牌为准")
+
+    # Crawlable ranking table for the featured brands
+    rank_rows = []
+    for i, x in enumerate([y for y in brands if y.get('is_featured')], 1):
+        xp = x.get('promo') or {}
+        if xp.get('priceLine'):
+            price_cell = rich(xp['priceLine'])
+        else:
+            mm = f"¥{x['min_month']:g}/月起" if x.get('min_month') else ''
+            yy = f"¥{x['min_year']:g}/年起" if x.get('min_year') else ''
+            price_cell = e(' · '.join(t for t in (mm, yy) if t) or '见品牌页')
+        xc, xd, _ = coupon_info(x)
+        coupon_cell = f'<code>{e(xc)}</code> {e(xd)}' if xc else '—'
+        rank_rows.append(f'''
+              <tr>
+                <td class="rank-no">{i:02d}</td>
+                <th scope="row"><a href="brands/{x['slug']}/">{e(x['name'])}</a></th>
+                <td>{e(text(x.get('lineType', [])) or '—')}</td>
+                <td>{price_cell}</td>
+                <td>{coupon_cell}</td>
+              </tr>''')
+    ranking_table_html = f'''
+      <section class="rank-section" aria-labelledby="rank-title">
+        <div class="section-heading">
+          <h2 id="rank-title"><i class="fa-solid fa-ranking-star"></i> 稳定机场推荐排行榜 · 主力推荐 {len(rank_rows)} 家</h2>
+          <span class="heading-tag">线路 · 价格 · 优惠码</span>
+        </div>
+        <div class="rank-table-wrap">
+          <table class="rank-table">
+            <thead><tr><th>排名</th><th>机场</th><th>线路类型</th><th>价格</th><th>专属优惠码</th></tr></thead>
+            <tbody>{''.join(rank_rows)}
+            </tbody>
+          </table>
+        </div>
+        <p class="section-tip"><i class="fa-solid fa-circle-info"></i> 排名为站长推荐顺序，与 Cola 的全栈导航「推荐机场主推榜」同步，不代表测速成绩；价格与优惠以各品牌官网结算页为准。</p>
+      </section>'''
+
+    faq_items = [
+        ('什么样的机场才算稳定机场？',
+         '主要看四点：线路类型（IPLC / IEPL 专线不经过公网跨境，晚高峰通常比普通中转更稳定）、计费倍率是否为 1×、晚高峰（20:00—23:00）的实际表现，以及是否有长期运营记录和正规售后渠道。本排行榜按线路、价格、设备限制和优惠整理，方便横向比较。'),
+        ('这个稳定机场推荐排行榜是怎么排序的？',
+         f'前 {sum(1 for y in brands if y.get("is_featured"))} 家为站长主力推荐，排序与 Cola 的全栈导航「推荐机场主推榜」保持同步；其余品牌按品牌资料库顺序收录。排名代表推荐顺序，不代表某一次测速的成绩。'),
+        ('IPLC、IEPL 专线和 BGP 中转有什么区别？',
+         'IPLC / IEPL 是国际专线，数据走运营商的跨境专用链路，延迟和晚高峰稳定性通常更好，价格也更高；BGP 中转经由国内多线机房转发后再出境，成本较低，适合日常轻度使用。可以在下方选购大厅用「全专线架构」「中转线路」标签筛选。'),
+        ('第一次买机场，应该选月付还是年付？',
+         '建议先买月付或最小的套餐，在自己所在的运营商（电信 / 联通 / 移动）晚高峰实际用几天，确认速度、稳定性和客户端都合适，再考虑季付、年付等长周期套餐。'),
+        ('优惠码怎么用？通过本站购买会更贵吗？',
+         f'在品牌页复制优惠码，到机场官网结算页的优惠码栏填写即可，本站收录的专属优惠码约为 {coupon_range}。各品牌规则不同（例如部分仅限新用户首单），实付以结算页为准。通过本站链接购买，价格不会增加。'),
+        ('买完机场之后还需要注意什么？',
+         '订阅链接或账号相当于访问凭据，不要公开分享；连接成功后，建议检查 WebRTC 与 DNS 是否泄露真实 IP。可以参考 Cola 的全栈导航里的在线隐私检测与网络安全专题。'),
+    ]
+    faq_blocks = []
+    for n, (q, a) in enumerate(faq_items):
+        faq_blocks.append('\n          <details class="faq-item"' + (' open' if n == 0 else '') + '>'
+                          + '<summary>' + e(q) + '</summary><p>' + e(a) + '</p></details>')
+    faq_html = f'''
+      <section class="faq-section" aria-labelledby="faq-title">
+        <div class="section-heading">
+          <h2 id="faq-title"><i class="fa-solid fa-circle-question"></i> 稳定机场推荐 · 常见问题</h2>
+          <span class="heading-tag">{len(faq_items)} 个问题</span>
+        </div>
+        <div class="faq-list">{''.join(faq_blocks)}
+        </div>
+      </section>'''
+
     # Build Main Index Page
     index_content = f'''
     <main class="index-container">
@@ -1046,14 +1194,14 @@ def build():
       <section class="hero-banner">
         <div class="hero-left">
           <div class="hero-eyebrow">
-            2026 年度精选 · 全网 35 家主流机场实测档案 · 独立选购大厅
+            全网 35 家主流机场档案 · 专线与价格对比 · 独立选购大厅
           </div>
           <h1 class="hero-title">
-            <span class="hero-sub-title">2026 稳定机场推荐排行榜</span>
-            <span class="hero-sub">全网专线机场排行榜与极客购买指南</span>
+            <span class="hero-sub-title">稳定机场推荐排行榜</span>
+            <span class="hero-sub">专线机场选购指南与价格对比</span>
           </h1>
           <p class="hero-desc">
-            深度剖析全专线、高速中转线路，精选稳定低延迟节点与按量计费不限时备用流量包。完美适配各类主流客户端，原生解锁 4K 流媒体与 AI 生产力。
+            这份稳定机场推荐排行榜按线路类型、晚高峰稳定性、价格与设备限制整理 35 家主流机场：IPLC / IEPL 专线与 BGP 中转分开比较，月付、年付与不限时流量包一目了然，每个品牌都有独立页面和专属优惠码。
           </p>
           <div class="hero-actions">
             <a href="#collection" class="btn-ghost">
@@ -1086,6 +1234,9 @@ def build():
       <!-- 4 Items Asymmetric Editorial Product Strip -->
       {editorial_strip_html}
 
+      <!-- 可抓取的排行榜表格（SEO 主关键词：稳定机场推荐排行榜） -->
+      {ranking_table_html}
+
       <!-- Concierge Reservation Band (Dark #141414 Strip) -->
       {concierge_band_html}
 
@@ -1095,7 +1246,7 @@ def build():
         <div class="guide-box why-box">
           <div class="guide-box-header">
             <span class="guide-pill">核心价值与初衷</span>
-            <h2>为什么你需要这份客观透明的 2026 机场推荐？</h2>
+            <h2>为什么你需要一份客观透明的稳定机场推荐？</h2>
           </div>
           <div class="guide-grid-3">
             <div class="guide-col-item">
@@ -1110,8 +1261,8 @@ def build():
             </div>
             <div class="guide-col-item">
               <div class="col-num">03</div>
-              <h3>立省 20%~30% 独家折扣</h3>
-              <p>官方渠道原价昂贵，我们与各大品牌长期沟通拿到专属优惠码（7折~85折），在独立落地页一键复制，让每一分预算都花在刀刃上。</p>
+              <h3>专属优惠码直接抵扣</h3>
+              <p>官方渠道原价昂贵，我们与各大品牌沟通拿到专属优惠码（{coupon_range}），在独立落地页一键复制，让每一分预算都花在刀刃上。</p>
             </div>
           </div>
         </div>
@@ -1141,7 +1292,7 @@ def build():
             <div class="step-card">
               <div class="step-num">04</div>
               <h4>结账激活独家优惠码</h4>
-              <p>进入本站每个品牌的独立落地页，复制对应优惠码（如 `weifeng90`、`flycat888`），在机场结算页粘贴享受折上折。</p>
+              <p>进入本站每个品牌的独立落地页，复制对应优惠码（如 <code>fly20</code>、<code>weifeng90</code>），在机场结算页填写即可抵扣，具体规则以结算页为准。</p>
             </div>
           </div>
         </div>
@@ -1209,7 +1360,7 @@ def build():
             <div class="notice-section">
               <h4>维持网站运营的小费用说明</h4>
               <p>
-                本站坚持完全中立、透明的真实数据整理。通过本站链接前往注册，机场官方会向站长返还一笔极其微薄的推荐（Affiliate）佣金。<strong>这笔小费用将全部用于维持本站测速探针服务器、日常维护与定期更新；您的购买价格绝不会因此增加任何一分钱</strong>，相反，您还能免费使用本站专属争取来的 7 折~85 折独家优惠码！感谢大家的支持！
+                本站坚持完全中立、透明的真实数据整理。通过本站链接前往注册，机场官方会向站长返还一笔极其微薄的推荐（Affiliate）佣金。<strong>这笔小费用将全部用于维持本站测速探针服务器、日常维护与定期更新；您的购买价格绝不会因此增加任何一分钱</strong>，相反，您还能免费使用本站争取来的专属优惠码（{coupon_range}）！感谢大家的支持！
               </p>
             </div>
             <div class="notice-section">
@@ -1236,7 +1387,9 @@ def build():
         </div>
       </section>
       
-      <!-- 品牌选购大厅 (前9名主推 + FlyV + 其余随机品牌独立放置) -->
+      {faq_html}
+
+      <!-- 品牌选购大厅 -->
       <section id="collection" class="collection-section">
         <div class="collection-toolbar">
           <div class="toolbar-header">
@@ -1297,12 +1450,27 @@ def build():
         {'@context': 'https://schema.org', '@type': 'WebSite', 'name': SITE_NAME, 'url': SITE_URL,
          'description': DEFAULT_DESC, 'inLanguage': 'zh-CN',
          'isPartOf': {'@type': 'WebSite', 'name': 'Cola的全栈导航', 'url': 'https://colasaiko.github.io/Home/'}},
-        {'@context': 'https://schema.org', '@type': 'ItemList', 'name': '2026 稳定机场推荐排行榜',
+        {'@context': 'https://schema.org', '@type': 'FAQPage',
+         'mainEntity': [{'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}} for q, a in faq_items]},
+        {'@context': 'https://schema.org', '@type': 'ItemList', 'name': '稳定机场推荐排行榜',
          'itemListOrder': 'https://schema.org/ItemListOrderAscending', 'numberOfItems': len(brands),
          'itemListElement': [{'@type': 'ListItem', 'position': i, 'name': x['name'], 'url': f"{SITE_URL}brands/{x['slug']}/"}
                              for i, x in enumerate(brands, 1)]},
     ]
-    (OUT / 'index.html').write_text(shell('2026 稳定机场推荐 · 专线机场排行榜', index_content, index_floating, desc=DEFAULT_DESC, jsonld=index_ld), encoding='utf-8')
+    (OUT / 'index.html').write_text(shell(INDEX_TITLE, index_content, index_floating, desc=DEFAULT_DESC, jsonld=index_ld), encoding='utf-8')
+
+    # 联盟链接检查：所有指向品牌推广链接的 <a> 都必须带 sponsored + nofollow + noopener
+    aff_urls = {html.escape(str(x.get('aff') or ''), quote=True) for x in brands if x.get('aff')}
+    bad_aff = []
+    for page in OUT.rglob('*.html'):
+        for tag in re.findall(r'<a\b[^>]*>', page.read_text(encoding='utf-8')):
+            m_href = re.search(r'href="([^"]+)"', tag)
+            if m_href and m_href.group(1) in aff_urls:
+                rel = set((re.search(r'rel="([^"]*)"', tag) or [None, ''])[1].split())
+                if not {'sponsored', 'nofollow', 'noopener'} <= rel:
+                    bad_aff.append(f'{page.relative_to(OUT)}: {tag[:120]}')
+    if bad_aff:
+        raise SystemExit('联盟链接缺少 rel="sponsored nofollow noopener"：\n' + '\n'.join(bad_aff[:20]))
 
     from datetime import date
     today = date.today().isoformat()
@@ -1314,7 +1482,7 @@ def build():
     (OUT / 'robots.txt').write_text(f'User-agent: *{chr(10)}Allow: /{chr(10)}{chr(10)}Sitemap: {SITE_URL}sitemap.xml{chr(10)}', encoding='utf-8')
     
     # Generate Enhanced BRAND-INDEX.md with Full Purchase Data
-    index_md = f'''# 🛒 机场买买买！2026 全网主流机场品牌购买全景指南与价格目录
+    index_md = f'''# 🛒 机场买买买！稳定机场推荐排行榜与品牌购买全景指南
 
 > **项目说明**：本文件专为 **[Colasaiko/Home](https://github.com/Colasaiko/Home)** 仓库打造。全网收录 **{total_brands}** 个主流翻墙机场品牌，前 12 名为主推核心品牌，各品牌独立落地页分开放置，提供月付/年付价格、独家优惠券与安全防漏指引。
 
