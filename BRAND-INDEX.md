@@ -8,7 +8,7 @@
 
 | # | 品牌名称 | 推荐梯队 | 线路架构 | 支持协议 | 最低月付 | 最低年付 | 不限时包 | 独家优惠码 | 独立购买页 | 官方购买通道 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 01 | **FlyV** | 👑 站长主力 | IEPL / IPLC 专线 | 常见协议 | ¥25 | ¥99 | ✅ 支持 | `fly20` (8折) | [查看独立落地页](website/dist/brands/feiv/index.html) | [直达购买 / 注册 ↗](https://varnexa.flyvaff.com/#/?code=6ae5FH9i) |
+| 01 | **FlyV** | 👑 站长主力 | IEPL / IPLC 专线 | 常见协议 | ¥25 | ¥99 | ✅ 支持 | `fly20` (8折) | [查看独立落地页](website/dist/brands/feiv/index.html) | [直达购买 / 注册 ↗](https://cola.flyvaff.com/#/register/?code=ZUwI0gXX) |
 | 02 | **微风网络** | 👑 站长主力 | IPLC | VLESS | ¥27 | ¥137 | ✅ 支持 | `weifeng90` (9折) | [查看独立落地页](website/dist/brands/weifeng/index.html) | [直达购买 / 注册 ↗](https://edp01.breezenetaff.com/#/?code=bSnymFll) |
 | 03 | **暮光加速** | 👑 站长主力 | 优质线路 | Shadowsocks | ¥20 | ¥103 | ✅ 支持 | `mm88` (8折) | [查看独立落地页](website/dist/brands/muguang/index.html) | [直达购买 / 注册 ↗](https://varnexa.twilightaff.com/#/?code=1eGqV85O) |
 | 04 | **飞猫云** | 👑 站长主力 | IPLC | VLESS | ¥25 | ¥84 | — | `flycat888` (8折) | [查看独立落地页](website/dist/brands/feimao/index.html) | [直达购买 / 注册 ↗](https://flycat1.flycatvipaff.cc/#/?code=UUcH5yh9) |

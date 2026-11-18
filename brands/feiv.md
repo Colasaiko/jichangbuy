@@ -83,7 +83,7 @@ features:
   - 'fly20 为新用户首单 8 折，每个账号限用一次，仅适用于入门、进阶、高端、商业四档周期套餐（含长周期）。'
 purchase:
   label: 快速购买
-  url: 'https://varnexa.flyvaff.com/#/?code=6ae5FH9i'
+  url: 'https://cola.flyvaff.com/#/register/?code=ZUwI0gXX'
   cloaked: true
 coupon:
   code: fly20
